@@ -61,7 +61,7 @@ The original physical wall remote continues to operate normally with zero modifi
 
 The Texas Instruments CC1101 communicates with the ESP32-C6 via hardware SPI. In addition, **GDO0** is connected to a dedicated output pin for direct 100% duty-cycle OOK modulation, and **GDO2** is wired for RF sniffing and timing analysis.
 
-![Wiring Diagram](media/diagrams/wiring-diagram.svg)
+![Wiring Diagram](media/diagrams/wiring-schematic.svg)
 
 ### Pinout Mapping Table
 
