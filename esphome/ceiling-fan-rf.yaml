@@ -1,0 +1,208 @@
+# ==============================================================================
+# ESPHome Configuration: 303.875 MHz Craftmade Ceiling Fan & Light RF Gateway
+# Hardware: Seeed Studio XIAO ESP32-C6 + TI CC1101 Sub-1 GHz Transceiver
+# Target: 303.875 MHz OOK/ASK Receiver in Ceiling Fan Canopy
+# ==============================================================================
+
+esphome:
+  name: ceiling-fan-rf
+  friendly_name: "ESPHome Craftmade Ceiling Fan & Light RF Gateway"
+  # Initialize CC1101 into idle mode on boot to minimize standby power draw
+  on_boot:
+    priority: -100
+    then:
+      - cc1101.set_idle
+
+esp32:
+  variant: esp32c6
+  flash_size: 4MB
+  framework:
+    type: esp-idf
+
+api:
+  # encryption:
+  #   key: "your_encryption_key_here"
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  # 802.11 DTIM modem sleep: drops active idle power by ~70-80% while preserving <10ms wake latency
+  power_save_mode: LIGHT
+
+logger:
+  hardware_uart: USB_SERIAL_JTAG
+  level: INFO
+
+# Hardware SPI configuration on Seeed XIAO ESP32-C6
+spi:
+  clk_pin: GPIO19   # D8
+  mosi_pin: GPIO18  # D10
+  miso_pin: GPIO20  # D9
+
+# CC1101 Sub-1 GHz transceiver tuned to 303.875 MHz
+cc1101:
+  cs_pin: GPIO22    # D4
+  frequency: 303.875MHz
+  filter_bandwidth: 406kHz
+
+# Remote Transmitter (CC1101 GDO0)
+# Enters TX mode only for the duration of the packet burst, then returns to IDLE state
+remote_transmitter:
+  pin: GPIO21       # D3
+  carrier_duty_percent: 100%
+  non_blocking: true
+  on_transmit:
+    then:
+      - cc1101.begin_tx
+  on_complete:
+    then:
+      - cc1101.set_idle
+
+# Remote Receiver / Sniffer (CC1101 GDO2)
+# Commented out in production to eliminate continuous RX power consumption (~17mA).
+# Uncomment if sniffing new remote codes is needed.
+# remote_receiver:
+#   pin: GPIO23       # D5
+#   filter: 150us
+#   idle: 15ms
+#   tolerance: 30%
+#   buffer_size: 10kb
+
+# ==============================================================================
+# RF Signal Scripts (Mean pulse timings reverse-engineered from physical remote)
+# Base unit T ≈ 330-350 µs, 2T ≈ 650-710 µs, repeat gap ≈ 11.9 ms
+# ==============================================================================
+script:
+  - id: send_fan_low
+    then:
+      - remote_transmitter.transmit_raw:
+          code: [335, -351, 653, -361, 646, -708, 306, -366, 650, -702, 308, -710, 307, -706, 308, -706, 313, -412, 599, -703, 310, -708, 308, -704, 312, -11907]
+          repeat:
+            times: 6
+            wait_time: 0s
+
+  - id: send_fan_medium
+    then:
+      - remote_transmitter.transmit_raw:
+          code: [336, -346, 653, -364, 647, -706, 302, -375, 639, -707, 307, -714, 300, -712, 305, -369, 646, -705, 308, -709, 306, -707, 309, -707, 309, -11911]
+          repeat:
+            times: 6
+            wait_time: 0s
+
+  - id: send_fan_high
+    then:
+      - remote_transmitter.transmit_raw:
+          code: [338, -342, 654, -363, 648, -704, 312, -364, 646, -705, 307, -707, 308, -367, 650, -701, 308, -706, 307, -707, 311, -705, 309, -705, 310, -11904]
+          repeat:
+            times: 6
+            wait_time: 0s
+
+  - id: send_fan_reverse
+    then:
+      - remote_transmitter.transmit_raw:
+          code: [331, -353, 651, -363, 648, -706, 308, -365, 649, -703, 308, -706, 310, -705, 310, -704, 310, -705, 312, -363, 649, -702, 308, -706, 311, -11896]
+          repeat:
+            times: 6
+            wait_time: 0s
+
+  - id: send_fan_off
+    then:
+      - remote_transmitter.transmit_raw:
+          code: [335, -347, 651, -362, 648, -708, 310, -361, 647, -708, 308, -708, 304, -707, 307, -707, 310, -708, 305, -708, 309, -363, 651, -702, 311, -11902]
+          repeat:
+            times: 6
+            wait_time: 0s
+
+  - id: send_light_1_toggle
+    then:
+      - remote_transmitter.transmit_raw:
+          code: [332, -352, 646, -371, 640, -712, 303, -374, 638, -713, 301, -713, 308, -705, 307, -713, 304, -366, 648, -706, 309, -707, 308, -365, 645, -11916]
+          repeat:
+            times: 6
+            wait_time: 0s
+
+  # Optional Secondary Light (L2) - Commented out as single-light fixture is installed
+  # - id: send_light_2_toggle
+  #   then:
+  #     - remote_transmitter.transmit_raw:
+  #         code: [337, -341, 655, -362, 648, -701, 311, -366, 646, -705, 307, -708, 307, -707, 306, -707, 310, -707, 305, -708, 311, -702, 310, -362, 653, -11894]
+  #         repeat:
+  #           times: 6
+  #           wait_time: 0s
+
+# ==============================================================================
+# Home Assistant Native Entities
+# ==============================================================================
+
+# Fan Component (Exposes native 3-speed fan entity)
+fan:
+  - platform: template
+    name: "Living Room Ceiling Fan"
+    id: living_room_fan
+    speed_count: 3
+    on_turn_on:
+      - lambda: |-
+          if (id(living_room_fan).speed == 0) {
+            id(send_fan_low).execute();
+          }
+    on_turn_off:
+      - script.execute: send_fan_off
+    on_speed_set:
+      - lambda: |-
+          if (x == 1) {
+            id(send_fan_low).execute();
+          } else if (x == 2) {
+            id(send_fan_medium).execute();
+          } else if (x == 3) {
+            id(send_fan_high).execute();
+          }
+
+# Output and Light Components
+output:
+  - platform: template
+    id: light_1_output
+    type: binary
+    write_action:
+      - script.execute: send_light_1_toggle
+
+light:
+  - platform: binary
+    name: "Living Room Fan Light"
+    id: living_room_fan_light_1
+    output: light_1_output
+
+# Discrete Action Buttons (Useful for Dashboards and direct automations)
+button:
+  - platform: template
+    name: "Light 1 Toggle"
+    icon: "mdi:lightbulb-sync"
+    on_press:
+      - script.execute: send_light_1_toggle
+  - platform: template
+    name: "Fan Speed Low"
+    icon: "mdi:fan-speed-1"
+    on_press:
+      - script.execute: send_fan_low
+  - platform: template
+    name: "Fan Speed Medium"
+    icon: "mdi:fan-speed-2"
+    on_press:
+      - script.execute: send_fan_medium
+  - platform: template
+    name: "Fan Speed High"
+    icon: "mdi:fan-speed-3"
+    on_press:
+      - script.execute: send_fan_high
+  - platform: template
+    name: "Fan Reverse"
+    icon: "mdi:fan-auto"
+    on_press:
+      - script.execute: send_fan_reverse
+  - platform: template
+    name: "Fan Power Off"
+    icon: "mdi:fan-off"
+    on_press:
+      - script.execute: send_fan_off

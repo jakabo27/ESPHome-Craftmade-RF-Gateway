@@ -1,0 +1,308 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 800" width="1000" height="800">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#18181b"/>
+      <stop offset="100%" stop-color="#1c1c1f"/>
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#242427"/>
+      <stop offset="100%" stop-color="#1e1e21"/>
+    </linearGradient>
+    <linearGradient id="fanGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#22272e"/>
+      <stop offset="100%" stop-color="#181c22"/>
+    </linearGradient>
+    
+    <filter id="glowTeal" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    <filter id="glowCoral" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    <filter id="glowAmber" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <!-- Markers for Arrows -->
+    <marker id="arrowTeal" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#4fa3a0"/>
+    </marker>
+    <marker id="arrowCoral" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d27089"/>
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#e5c07b"/>
+    </marker>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#61afef"/>
+    </marker>
+    <marker id="arrowGray" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect width="1000" height="800" fill="url(#bgGrad)"/>
+
+  <!-- Subtle Blueprint Grid -->
+  <g stroke="#ffffff" stroke-opacity="0.02" stroke-width="1">
+    <path d="M0 50 H1000 M0 100 H1000 M0 150 H1000 M0 200 H1000 M0 250 H1000 M0 300 H1000 M0 350 H1000 M0 400 H1000 M0 450 H1000 M0 500 H1000 M0 550 H1000 M0 600 H1000 M0 650 H1000 M0 700 H1000 M0 750 H1000" />
+    <path d="M50 0 V800 M100 0 V800 M150 0 V800 M200 0 V800 M250 0 V800 M300 0 V800 M350 0 V800 M400 0 V800 M450 0 V800 M500 0 V800 M550 0 V800 M600 0 V800 M650 0 V800 M700 0 V800 M750 0 V800 M800 0 V800 M850 0 V800 M900 0 V800 M950 0 V800" />
+  </g>
+
+  <!-- Top Title Banner -->
+  <g transform="translate(45, 52)">
+    <rect x="-10" y="-8" width="4" height="42" fill="#4fa3a0" rx="2"/>
+    <text font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="22" font-weight="700" fill="#ecebe6" letter-spacing="0.5">ESPHome Craftmade Ceiling Fan &amp; Light RF Gateway</text>
+    <text y="24" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="13" fill="#8e8e89">Dual-Control Bridge: Home Assistant Integration with Concurrent Physical Remote Operation</text>
+  </g>
+
+  <!-- ==================== FLOW ARROWS (ROUTING) ==================== -->
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    
+    <!-- 1. Wi-Fi Connection (Home Assistant <-> ESPHome Gateway) -->
+    <path d="M 280 230 C 330 230, 340 230, 390 230" stroke="#61afef" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+    <path d="M 390 240 C 340 240, 330 240, 280 240" stroke="#61afef" stroke-width="1.8" stroke-dasharray="4,4" marker-end="url(#arrowBlue)"/>
+
+    <!-- 2. Gateway RF Transmission (ESPHome Gateway -> Ceiling Fan) -->
+    <!-- From Gateway (x=670, y=235) to Fan Canopy (x=770, y=360) -->
+    <path d="M 670 235 C 720 235, 730 350, 770 360" stroke="#4fa3a0" stroke-width="3.5" marker-end="url(#arrowTeal)" filter="url(#glowTeal)"/>
+
+    <!-- 3. Physical Wall Remote RF Transmission (Remote -> Ceiling Fan) -->
+    <!-- From Wall Remote (x=380, y=550) to Fan Canopy (x=770, y=410) -->
+    <path d="M 380 550 C 560 550, 680 430, 770 410" stroke="#d27089" stroke-width="3.5" marker-end="url(#arrowCoral)" filter="url(#glowCoral)"/>
+
+    <!-- 4. Reverse-Engineering Sniffer Path (Historic / Decoded) -->
+    <!-- From Wall Remote (x=280, y=460) up to Gateway (x=460, y=350) -->
+    <path d="M 280 470 C 320 470, 370 380, 430 350" stroke="#e5c07b" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowAmber)"/>
+  </g>
+
+  <!-- Wire Annotations / Labels -->
+  <!-- Wi-Fi Label -->
+  <g transform="translate(295, 202)">
+    <rect x="0" y="0" width="85" height="20" rx="4" fill="#182333" stroke="#2563eb" stroke-width="1"/>
+    <text x="42" y="14" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#93c5fd" text-anchor="middle">Wi-Fi (Native API)</text>
+  </g>
+
+  <!-- Gateway RF Label -->
+  <g transform="translate(685, 275)">
+    <rect x="0" y="0" width="105" height="34" rx="5" fill="#162928" stroke="#4fa3a0" stroke-width="1"/>
+    <text x="52" y="15" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#5eead4" text-anchor="middle">303.875 MHz RF</text>
+    <text x="52" y="27" font-family="system-ui, sans-serif" font-size="9" fill="#99f6e4" text-anchor="middle">OOK Pulse Burst (6x)</text>
+  </g>
+
+  <!-- Wall Remote RF Label -->
+  <g transform="translate(530, 520)">
+    <rect x="0" y="0" width="125" height="34" rx="5" fill="#2d1c23" stroke="#d27089" stroke-width="1"/>
+    <text x="62" y="15" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#f472b6" text-anchor="middle">303.875 MHz RF</text>
+    <text x="62" y="27" font-family="system-ui, sans-serif" font-size="9" fill="#fbcfe8" text-anchor="middle">Original SAW Resonator</text>
+  </g>
+
+  <!-- Sniffing Path Label -->
+  <g transform="translate(320, 385)">
+    <rect x="0" y="0" width="120" height="22" rx="4" fill="#292318" stroke="#d97706" stroke-width="1"/>
+    <text x="60" y="15" font-family="system-ui, sans-serif" font-size="9" font-weight="600" fill="#fde68a" text-anchor="middle">Phase 1 Sniffing / Timing</text>
+  </g>
+
+  <!-- ==================== BLOCK 1: HOME ASSISTANT ==================== -->
+  <g id="block_ha" transform="translate(45, 120)">
+    <!-- Container -->
+    <rect x="0" y="0" width="235" height="260" rx="10" fill="url(#cardGrad)" stroke="#383d47" stroke-width="1.8"/>
+    
+    <!-- Header -->
+    <rect x="0" y="0" width="235" height="42" rx="10" fill="#1e2738"/>
+    <line x1="0" y1="42" x2="235" y2="42" stroke="#2563eb" stroke-width="2"/>
+    <circle cx="22" cy="21" r="9" fill="#2563eb"/>
+    <path d="M 17 21 L 22 16 L 27 21 M 19 20 V 25 H 25 V 20" stroke="#ffffff" stroke-width="1.2" fill="none"/>
+    <text x="38" y="26" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#ecebe6">Home Assistant</text>
+
+    <!-- Subtitle / Area -->
+    <text x="18" y="65" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#94a3b8">Area: Living Room</text>
+
+    <!-- Entity 1: Fan -->
+    <g transform="translate(14, 78)">
+      <rect x="0" y="0" width="207" height="46" rx="6" fill="#191c24" stroke="#2e3442" stroke-width="1"/>
+      <circle cx="16" cy="23" r="10" fill="#1e293b"/>
+      <path d="M 12 23 C 14 18, 18 18, 20 23 C 18 28, 14 28, 12 23 Z" stroke="#60a5fa" stroke-width="1" fill="none"/>
+      <text x="34" y="19" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#e2e8f0">Living Room Ceiling Fan</text>
+      <text x="34" y="34" font-family="monospace" font-size="9" fill="#93c5fd">fan.living_room_ceiling_fan</text>
+      <rect x="172" y="8" width="26" height="14" rx="3" fill="#1d4ed8"/>
+      <text x="185" y="18" font-family="monospace" font-size="8" fill="#ffffff" text-anchor="middle">3-SPD</text>
+    </g>
+
+    <!-- Entity 2: Light -->
+    <g transform="translate(14, 132)">
+      <rect x="0" y="0" width="207" height="46" rx="6" fill="#191c24" stroke="#2e3442" stroke-width="1"/>
+      <circle cx="16" cy="23" r="10" fill="#1e293b"/>
+      <circle cx="16" cy="23" r="5" fill="#facc15"/>
+      <text x="34" y="19" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#e2e8f0">Living Room Fan Light</text>
+      <text x="34" y="34" font-family="monospace" font-size="9" fill="#fde047">light.living_room_fan_light</text>
+      <rect x="172" y="8" width="26" height="14" rx="3" fill="#854d0e"/>
+      <text x="185" y="18" font-family="monospace" font-size="8" fill="#fef08a" text-anchor="middle">TOG</text>
+    </g>
+
+    <!-- Entity 3: Discrete Buttons -->
+    <g transform="translate(14, 186)">
+      <rect x="0" y="0" width="207" height="58" rx="6" fill="#191c24" stroke="#2e3442" stroke-width="1"/>
+      <text x="10" y="17" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#94a3b8">Action Buttons &amp; Dashboard:</text>
+      <text x="10" y="33" font-family="monospace" font-size="9" fill="#a5b4fc">button.living_room_fan_speed_high</text>
+      <text x="10" y="47" font-family="monospace" font-size="9" fill="#a5b4fc">button.living_room_fan_reverse</text>
+    </g>
+  </g>
+
+  <!-- ==================== BLOCK 2: ESPHOME GATEWAY ==================== -->
+  <g id="block_gateway" transform="translate(390, 110)">
+    <!-- Container -->
+    <rect x="0" y="0" width="280" height="280" rx="12" fill="url(#cardGrad)" stroke="#4fa3a0" stroke-width="2"/>
+    
+    <!-- Header -->
+    <rect x="0" y="0" width="280" height="42" rx="12" fill="#182c2b"/>
+    <line x1="0" y1="42" x2="280" y2="42" stroke="#4fa3a0" stroke-width="2"/>
+    <circle cx="22" cy="21" r="9" fill="#0d9488"/>
+    <text x="22" y="25" font-family="monospace" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">RF</text>
+    <text x="38" y="26" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#ecebe6">ESPHome Gateway (ESP32-C6)</text>
+
+    <!-- Subtitle: Device & Power Info -->
+    <text x="18" y="64" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#5eead4">Device: ceiling-fan-rf (192.168.1.221)</text>
+
+    <!-- Inner Card: XIAO ESP32-C6 Logic -->
+    <g transform="translate(14, 76)">
+      <rect x="0" y="0" width="252" height="88" rx="6" fill="#171a22" stroke="#283241" stroke-width="1"/>
+      <text x="12" y="18" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#cbd5e1">Seeed XIAO ESP32-C6 (esp-idf)</text>
+      <text x="12" y="35" font-family="system-ui, sans-serif" font-size="10" fill="#94a3b8">• ESPHome Native API Server (:6053)</text>
+      <text x="12" y="51" font-family="system-ui, sans-serif" font-size="10" fill="#94a3b8">• Wi-Fi Modem Sleep (power_save_mode: LIGHT)</text>
+      <text x="12" y="67" font-family="system-ui, sans-serif" font-size="10" fill="#94a3b8">• 7x Raw Timed Pulse Array Generators</text>
+      <text x="12" y="81" font-family="system-ui, sans-serif" font-size="9" fill="#6ee7b7">  Active idle draw: &lt;15mA | Wake: &lt;10ms</text>
+    </g>
+
+    <!-- Inner Card: TI CC1101 Radio Subsystem -->
+    <g transform="translate(14, 172)">
+      <rect x="0" y="0" width="252" height="94" rx="6" fill="#142132" stroke="#254a6e" stroke-width="1"/>
+      <text x="12" y="18" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#90cdf4">TI CC1101 Sub-1 GHz Transceiver</text>
+      <text x="12" y="35" font-family="system-ui, sans-serif" font-size="10" fill="#cbd5e1">• Tuned: 303.875 MHz | Bandwidth: 406 kHz</text>
+      <text x="12" y="51" font-family="system-ui, sans-serif" font-size="10" fill="#cbd5e1">• TX Pin: GPIO21 (D3) via GDO0 (100% duty)</text>
+      <text x="12" y="67" font-family="system-ui, sans-serif" font-size="10" fill="#cbd5e1">• Automated Idle: Standby drop to ~1.5mA</text>
+      <text x="12" y="83" font-family="system-ui, sans-serif" font-size="9" fill="#38bdf8">  Transitions: cc1101.begin_tx → set_idle</text>
+    </g>
+  </g>
+
+  <!-- ==================== BLOCK 3: PHYSICAL WALL REMOTE ==================== -->
+  <g id="block_remote" transform="translate(45, 420)">
+    <!-- Container -->
+    <rect x="0" y="0" width="235" height="310" rx="10" fill="url(#cardGrad)" stroke="#d27089" stroke-width="1.8"/>
+    
+    <!-- Header -->
+    <rect x="0" y="0" width="235" height="42" rx="10" fill="#2d1720"/>
+    <line x1="0" y1="42" x2="235" y2="42" stroke="#d27089" stroke-width="2"/>
+    <circle cx="22" cy="21" r="9" fill="#be185d"/>
+    <text x="22" y="25" font-family="monospace" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">TX</text>
+    <text x="38" y="26" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#ecebe6">Craftmade Wall Remote</text>
+
+    <!-- Subtitle: Hardware Specs -->
+    <text x="18" y="64" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#f472b6">Hardwired Wall Mount (12V A23)</text>
+
+    <!-- Physical Buttons Layout Graphic -->
+    <g transform="translate(18, 76)">
+      <!-- Remote Faceplate Outline -->
+      <rect x="0" y="0" width="199" height="160" rx="8" fill="#181a20" stroke="#333a46" stroke-width="1.5"/>
+      <circle cx="99" cy="14" r="3" fill="#ef4444"/> <!-- Red LED -->
+
+      <!-- Buttons: 2 Columns -->
+      <!-- Left Column: HIGH, MED, LOW, OFF -->
+      <rect x="18" y="28" width="70" height="24" rx="4" fill="#374151" stroke="#4b5563" stroke-width="1"/>
+      <text x="53" y="44" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#f3f4f6" text-anchor="middle">HIGH</text>
+
+      <rect x="18" y="58" width="70" height="24" rx="4" fill="#374151" stroke="#4b5563" stroke-width="1"/>
+      <text x="53" y="74" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#f3f4f6" text-anchor="middle">MED</text>
+
+      <rect x="18" y="88" width="70" height="24" rx="4" fill="#374151" stroke="#4b5563" stroke-width="1"/>
+      <text x="53" y="104" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#f3f4f6" text-anchor="middle">LOW</text>
+
+      <rect x="18" y="118" width="70" height="24" rx="4" fill="#1f2937" stroke="#374151" stroke-width="1"/>
+      <text x="53" y="134" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#9ca3af" text-anchor="middle">OFF</text>
+
+      <!-- Right Column: L-1, L, REV -->
+      <rect x="110" y="28" width="70" height="24" rx="4" fill="#065f46" stroke="#059669" stroke-width="1"/>
+      <text x="145" y="44" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#a7f3d0" text-anchor="middle">L-1</text>
+
+      <rect x="110" y="58" width="70" height="24" rx="4" fill="#065f46" stroke="#059669" stroke-width="1"/>
+      <text x="145" y="74" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#a7f3d0" text-anchor="middle">L (L2)</text>
+
+      <rect x="110" y="88" width="70" height="24" rx="4" fill="#374151" stroke="#4b5563" stroke-width="1"/>
+      <text x="145" y="104" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#f3f4f6" text-anchor="middle">REV</text>
+
+      <!-- Slider Power Switch -->
+      <rect x="110" y="122" width="70" height="16" rx="3" fill="#111827"/>
+      <rect x="140" y="120" width="20" height="20" rx="3" fill="#e5e7eb"/>
+      <text x="125" y="134" font-family="system-ui, sans-serif" font-size="8" fill="#9ca3af">ON</text>
+    </g>
+
+    <!-- Note on original operation -->
+    <text x="18" y="260" font-family="system-ui, sans-serif" font-size="10" fill="#cbd5e1">• Emits 303.875 MHz ASK/OOK bursts</text>
+    <text x="18" y="278" font-family="system-ui, sans-serif" font-size="10" fill="#cbd5e1">• 100% concurrent with ESPHome</text>
+    <text x="18" y="296" font-family="system-ui, sans-serif" font-size="10" fill="#cbd5e1">• No physical rewiring required</text>
+  </g>
+
+  <!-- ==================== BLOCK 4: CEILING FAN & LIGHT UNIT ==================== -->
+  <g id="block_fan" transform="translate(770, 240)">
+    <!-- Container -->
+    <rect x="0" y="0" width="185" height="280" rx="12" fill="url(#fanGrad)" stroke="#475569" stroke-width="2"/>
+    
+    <!-- Header -->
+    <rect x="0" y="0" width="185" height="42" rx="12" fill="#1f2937"/>
+    <line x1="0" y1="42" x2="185" y2="42" stroke="#64748b" stroke-width="2"/>
+    <circle cx="22" cy="21" r="9" fill="#475569"/>
+    <path d="M 17 21 L 27 21 M 22 16 L 22 26" stroke="#ffffff" stroke-width="1.5"/>
+    <text x="38" y="26" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#ecebe6">Ceiling Fan &amp; Light</text>
+
+    <!-- Subtitle -->
+    <text x="15" y="65" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#94a3b8">Craftmade Appliance</text>
+
+    <!-- RF Receiver Canopy Section -->
+    <g transform="translate(12, 78)">
+      <rect x="0" y="0" width="161" height="60" rx="6" fill="#111827" stroke="#374151" stroke-width="1"/>
+      <text x="10" y="18" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#e2e8f0">Canopy RF Receiver</text>
+      <text x="10" y="34" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8">• 303.875 MHz Front-End</text>
+      <text x="10" y="48" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8">• Microcontroller Decoder</text>
+    </g>
+
+    <!-- Fan Motor Controller Section -->
+    <g transform="translate(12, 146)">
+      <rect x="0" y="0" width="161" height="58" rx="6" fill="#111827" stroke="#374151" stroke-width="1"/>
+      <text x="10" y="18" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#e2e8f0">AC Fan Motor</text>
+      <text x="10" y="34" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8">• Speeds: Low / Med / High</text>
+      <text x="10" y="48" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8">• Reverse Windings Relay</text>
+    </g>
+
+    <!-- Light Fixture Section -->
+    <g transform="translate(12, 212)">
+      <rect x="0" y="0" width="161" height="52" rx="6" fill="#111827" stroke="#374151" stroke-width="1"/>
+      <text x="10" y="18" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#facc15">Light Fixture</text>
+      <text x="10" y="34" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8">• Triac / Relay Toggle</text>
+      <text x="10" y="46" font-family="system-ui, sans-serif" font-size="8" fill="#ca8a04">Controlled by L1 toggle</text>
+    </g>
+  </g>
+
+  <!-- ==================== HIGHLIGHT CALLOUT BANNER ==================== -->
+  <g id="callout_banner" transform="translate(390, 420)">
+    <rect x="0" y="0" width="350" height="145" rx="8" fill="#181c22" stroke="#2e3846" stroke-width="1.5"/>
+    <rect x="0" y="0" width="350" height="26" rx="8" fill="#242e3b"/>
+    <text x="14" y="18" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#38bdf8">KEY ARCHITECTURAL HIGHLIGHTS</text>
+    
+    <text x="14" y="48" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#4ade80">✓ Dual Control Concurrency:</text>
+    <text x="26" y="63" font-family="system-ui, sans-serif" font-size="9" fill="#cbd5e1">The physical wall remote and Home Assistant operate simultaneously</text>
+    <text x="26" y="75" font-family="system-ui, sans-serif" font-size="9" fill="#cbd5e1">with zero interference and no changes to household muscle memory.</text>
+
+    <text x="14" y="94" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#fcd34d">✓ Low-Power Active Standby:</text>
+    <text x="26" y="109" font-family="system-ui, sans-serif" font-size="9" fill="#cbd5e1">Wi-Fi modem sleep + CC1101 idle state keep gateway draw &lt;15mA,</text>
+    <text x="26" y="121" font-family="system-ui, sans-serif" font-size="9" fill="#cbd5e1">waking instantly (&lt;10ms) when automated commands arrive.</text>
+  </g>
+
+  <!-- Bottom Footer Watermark -->
+  <g transform="translate(45, 765)">
+    <text font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Craftmade 303.875 MHz RF Gateway | Seeed Studio XIAO ESP32-C6 + CC1101 | ESPHome 2026</text>
+  </g>
+</svg>
