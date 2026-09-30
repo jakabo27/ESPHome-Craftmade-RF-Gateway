@@ -105,7 +105,7 @@
     <circle cx="50" cy="256" r="5" fill="none" stroke="#d4af37" stroke-width="1.5"/>
     <circle cx="50" cy="256" r="2" fill="#d4af37"/>
 
-    <!-- ----------------- LEFT PINS & EXTERNAL LABELS ----------------- -->
+    <!-- Left Pins and External Labels -->
     <!-- Pins on left edge (x=15) -->
     
     <!-- D0 -->
@@ -139,7 +139,7 @@
     <circle cx="15" cy="245" r="5.5" fill="#1e222b" stroke="#64748b" stroke-width="1.5"/>
     <text x="-8" y="249" font-family="monospace" font-size="11" fill="#64748b" text-anchor="end">D6 (GPIO16)</text>
 
-    <!-- ----------------- RIGHT PINS & LABELS ----------------- -->
+    <!-- Right Pins and Labels -->
     <!-- Pins on right edge (x=175) -->
 
     <!-- VBUS -->

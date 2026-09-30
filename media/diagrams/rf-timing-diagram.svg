@@ -8,8 +8,8 @@
 
     <!-- RF Carrier Pulse Fill Gradient -->
     <linearGradient id="pulseFill" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.35"/>
-      <stop offset="100%" stop-color="#0284c7" stop-opacity="0.05"/>
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#0284c7" stop-opacity="0.02"/>
     </linearGradient>
 
     <!-- Card Background Gradient -->
@@ -17,12 +17,6 @@
       <stop offset="0%" stop-color="#1e222b"/>
       <stop offset="100%" stop-color="#14171f"/>
     </linearGradient>
-
-    <!-- Glow Filter for Active Trace -->
-    <filter id="waveGlow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="2.5" result="blur" />
-      <feComposite in="SourceGraphic" in2="blur" operator="over" />
-    </filter>
   </defs>
 
   <!-- Canvas Background -->
@@ -52,23 +46,23 @@
   <!-- Section Grouping Brackets (Top of Waveform) -->
   <!-- 1. Address Word Bracket (x=60 to x=420) -->
   <g transform="translate(60, 68)">
-    <path d="M 0 14 L 0 4 L 180 4 L 180 0 L 180 4 L 360 4 L 360 14" fill="none" stroke="#3b82f6" stroke-width="1.5"/>
-    <rect x="90" y="-8" width="180" height="22" rx="4" fill="#172554" stroke="#2563eb" stroke-width="1"/>
-    <text x="180" y="7" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#93c5fd" text-anchor="middle">FIXED ADDRESS (Symbols 0–5)</text>
+    <path d="M 0 14 L 0 4 L 80 4 M 280 4 L 360 4 L 360 14" fill="none" stroke="#3b82f6" stroke-width="1.5"/>
+    <rect x="85" y="-10" width="190" height="24" rx="4" fill="#172554" stroke="#2563eb" stroke-width="1.2"/>
+    <text x="180" y="6" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#93c5fd" text-anchor="middle">FIXED ADDRESS (Symbols 0–5)</text>
   </g>
 
   <!-- 2. Command Word Bracket (x=420 to x=780) -->
   <g transform="translate(420, 68)">
-    <path d="M 0 14 L 0 4 L 180 4 L 180 0 L 180 4 L 360 4 L 360 14" fill="none" stroke="#2dd4bf" stroke-width="1.5"/>
-    <rect x="90" y="-8" width="180" height="22" rx="4" fill="#132e2b" stroke="#0d9488" stroke-width="1"/>
-    <text x="180" y="7" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#5eead4" text-anchor="middle">COMMAND: FAN HIGH (Symbols 6–11)</text>
+    <path d="M 0 14 L 0 4 L 50 4 M 310 4 L 360 4 L 360 14" fill="none" stroke="#2dd4bf" stroke-width="1.5"/>
+    <rect x="55" y="-10" width="250" height="24" rx="4" fill="#132e2b" stroke="#0d9488" stroke-width="1.2"/>
+    <text x="180" y="6" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#5eead4" text-anchor="middle">COMMAND: FAN HIGH (Symbols 6–11)</text>
   </g>
 
   <!-- 3. Trailing Mark + Sync Gap Bracket (x=780 to x=900) -->
   <g transform="translate(780, 68)">
-    <path d="M 0 14 L 0 4 L 60 4 L 60 0 L 60 4 L 120 4 L 120 14" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
-    <rect x="15" y="-8" width="90" height="22" rx="4" fill="#2d2212" stroke="#d97706" stroke-width="1"/>
-    <text x="60" y="7" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#fde047" text-anchor="middle">SYNC GAP</text>
+    <path d="M 0 14 L 0 4 L 12 4 M 108 4 L 120 4 L 120 14" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
+    <rect x="17" y="-10" width="86" height="24" rx="4" fill="#2d2212" stroke="#d97706" stroke-width="1.2"/>
+    <text x="60" y="6" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#fde047" text-anchor="middle">SYNC GAP</text>
   </g>
 
   <!-- Waveform High/Low Shading Area -->
@@ -90,7 +84,7 @@
     L 900 160
   " fill="url(#pulseFill)"/>
 
-  <!-- Waveform Digital Trace Line -->
+  <!-- Waveform Digital Trace Line (Clean, Sharp Digital Edges) -->
   <path d="
     M 50 160 
     L 60 160 L 60 110 L 80 110 L 80 160 
@@ -107,7 +101,7 @@
     L 720 160 L 720 110 L 740 110 L 740 160 
     L 780 160 L 780 110 L 800 110 L 800 160 
     L 840 160
-  " fill="none" stroke="#38bdf8" stroke-width="2.5" filter="url(#waveGlow)"/>
+  " fill="none" stroke="#38bdf8" stroke-width="2"/>
 
   <!-- Sync Gap Interruption Lines (Zigzag / Break) -->
   <g stroke="#94a3b8" stroke-width="1.8" fill="none">
