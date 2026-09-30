@@ -111,6 +111,8 @@ The Texas Instruments CC1101 communicates with the ESP32-C6 via hardware SPI. In
 
 Reverse engineering was conducted by capturing continuous raw dumps using `remote_receiver` on the CC1101 GDO2 pin:
 
+![RF Pulse Timing & Protocol Decoding](media/diagrams/rf-timing-diagram.svg)
+
 * **Base Time Unit ($T$):** $\approx 330\text{–}350\,\mu\text{s}$ (short pulse $s$)
 * **Long Time Unit ($2T$):** $\approx 650\text{–}710\,\mu\text{s}$ (long pulse $L$)
 * **Frame Length:** 12 symbols (24 mark/space pulses) + 1 trailing mark + 1 sync space gap ($\approx 11.9\,\text{ms}$) = **26 pulses**.

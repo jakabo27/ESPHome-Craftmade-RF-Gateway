@@ -16,6 +16,8 @@ This document details the reverse engineering and signal analysis of the proprie
 
 ## 2. Pulse Structure & Timing Metrics
 
+![RF Pulse Timing & Protocol Decoding](../media/diagrams/rf-timing-diagram.svg)
+
 Each transmission burst consists of:
 * **24 alternating mark/space pulses** forming 12 symbols.
 * **1 trailing mark pulse** (25th pulse).

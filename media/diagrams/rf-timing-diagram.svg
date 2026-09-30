@@ -1,0 +1,284 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" width="960" height="520">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f1115"/>
+      <stop offset="100%" stop-color="#161822"/>
+    </linearGradient>
+
+    <!-- RF Carrier Pulse Fill Gradient -->
+    <linearGradient id="pulseFill" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0284c7" stop-opacity="0.05"/>
+    </linearGradient>
+
+    <!-- Card Background Gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e222b"/>
+      <stop offset="100%" stop-color="#14171f"/>
+    </linearGradient>
+
+    <!-- Glow Filter for Active Trace -->
+    <filter id="waveGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2.5" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect width="960" height="520" fill="url(#bgGrad)"/>
+
+  <!-- Blueprint Grid -->
+  <g stroke="#ffffff" stroke-opacity="0.03" stroke-width="1">
+    <path d="M0 40 H960 M0 80 H960 M0 120 H960 M0 160 H960 M0 200 H960 M0 240 H960 M0 280 H960 M0 320 H960 M0 360 H960 M0 400 H960 M0 440 H960 M0 480 H960" />
+    <path d="M40 0 V520 M80 0 V520 M120 0 V520 M160 0 V520 M200 0 V520 M240 0 V520 M280 0 V520 M320 0 V520 M360 0 V520 M400 0 V520 M440 0 V520 M480 0 V520 M520 0 V520 M560 0 V520 M600 0 V520 M640 0 V520 M680 0 V520 M720 0 V520 M760 0 V520 M800 0 V520 M840 0 V520 M880 0 V520 M920 0 V520" />
+  </g>
+
+  <!-- Title Header -->
+  <g transform="translate(40, 36)">
+    <rect x="-10" y="-6" width="4" height="42" fill="#38bdf8" rx="2"/>
+    <text font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="20" font-weight="700" fill="#f8fafc" letter-spacing="0.3">Craftmade 303.875 MHz OOK Transmission Packet Timing</text>
+    <text y="24" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="13" fill="#94a3b8">Reverse-Engineered Pulse Structure · 26-Pulse Alternating Mark/Space Sequence (Example: Fan High)</text>
+  </g>
+
+  <!-- ==================== WAVEFORM SECTION ==================== -->
+  <!-- 
+    Baseline (Low): y = 160
+    Carrier ON (High): y = 110
+    1T (Short) = 20px (~340 µs)
+    2T (Long)  = 40px (~680 µs)
+  -->
+
+  <!-- Section Grouping Brackets (Top of Waveform) -->
+  <!-- 1. Address Word Bracket (x=60 to x=420) -->
+  <g transform="translate(60, 68)">
+    <path d="M 0 14 L 0 4 L 180 4 L 180 0 L 180 4 L 360 4 L 360 14" fill="none" stroke="#3b82f6" stroke-width="1.5"/>
+    <rect x="90" y="-8" width="180" height="22" rx="4" fill="#172554" stroke="#2563eb" stroke-width="1"/>
+    <text x="180" y="7" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#93c5fd" text-anchor="middle">FIXED ADDRESS (Symbols 0–5)</text>
+  </g>
+
+  <!-- 2. Command Word Bracket (x=420 to x=780) -->
+  <g transform="translate(420, 68)">
+    <path d="M 0 14 L 0 4 L 180 4 L 180 0 L 180 4 L 360 4 L 360 14" fill="none" stroke="#2dd4bf" stroke-width="1.5"/>
+    <rect x="90" y="-8" width="180" height="22" rx="4" fill="#132e2b" stroke="#0d9488" stroke-width="1"/>
+    <text x="180" y="7" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#5eead4" text-anchor="middle">COMMAND: FAN HIGH (Symbols 6–11)</text>
+  </g>
+
+  <!-- 3. Trailing Mark + Sync Gap Bracket (x=780 to x=900) -->
+  <g transform="translate(780, 68)">
+    <path d="M 0 14 L 0 4 L 60 4 L 60 0 L 60 4 L 120 4 L 120 14" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
+    <rect x="15" y="-8" width="90" height="22" rx="4" fill="#2d2212" stroke="#d97706" stroke-width="1"/>
+    <text x="60" y="7" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#fde047" text-anchor="middle">SYNC GAP</text>
+  </g>
+
+  <!-- Waveform High/Low Shading Area -->
+  <path d="
+    M 60 160 
+    L 60 110 L 80 110 L 80 160 
+    L 100 160 L 100 110 L 140 110 L 140 160 
+    L 160 160 L 160 110 L 200 110 L 200 160 
+    L 240 160 L 240 110 L 260 110 L 260 160 
+    L 280 160 L 280 110 L 320 110 L 320 160 
+    L 360 160 L 360 110 L 380 110 L 380 160 
+    L 420 160 L 420 110 L 440 110 L 440 160 
+    L 460 160 L 460 110 L 500 110 L 500 160 
+    L 540 160 L 540 110 L 560 110 L 560 160 
+    L 600 160 L 600 110 L 620 110 L 620 160 
+    L 660 160 L 660 110 L 680 110 L 680 160 
+    L 720 160 L 720 110 L 740 110 L 740 160 
+    L 780 160 L 780 110 L 800 110 L 800 160 
+    L 900 160
+  " fill="url(#pulseFill)"/>
+
+  <!-- Waveform Digital Trace Line -->
+  <path d="
+    M 50 160 
+    L 60 160 L 60 110 L 80 110 L 80 160 
+    L 100 160 L 100 110 L 140 110 L 140 160 
+    L 160 160 L 160 110 L 200 110 L 200 160 
+    L 240 160 L 240 110 L 260 110 L 260 160 
+    L 280 160 L 280 110 L 320 110 L 320 160 
+    L 360 160 L 360 110 L 380 110 L 380 160 
+    L 420 160 L 420 110 L 440 110 L 440 160 
+    L 460 160 L 460 110 L 500 110 L 500 160 
+    L 540 160 L 540 110 L 560 110 L 560 160 
+    L 600 160 L 600 110 L 620 110 L 620 160 
+    L 660 160 L 660 110 L 680 110 L 680 160 
+    L 720 160 L 720 110 L 740 110 L 740 160 
+    L 780 160 L 780 110 L 800 110 L 800 160 
+    L 840 160
+  " fill="none" stroke="#38bdf8" stroke-width="2.5" filter="url(#waveGlow)"/>
+
+  <!-- Sync Gap Interruption Lines (Zigzag / Break) -->
+  <g stroke="#94a3b8" stroke-width="1.8" fill="none">
+    <path d="M 840 160 L 848 160 L 852 152 L 856 168 L 860 160 L 900 160" />
+    <path d="M 850 148 L 858 172" stroke="#64748b" stroke-width="1.5" />
+    <path d="M 854 148 L 862 172" stroke="#64748b" stroke-width="1.5" />
+  </g>
+
+  <!-- Digital State Labels (Y-Axis) -->
+  <text x="44" y="114" font-family="monospace" font-size="10.5" font-weight="700" fill="#38bdf8" text-anchor="end">TX ON</text>
+  <text x="44" y="164" font-family="monospace" font-size="10.5" font-weight="700" fill="#64748b" text-anchor="end">IDLE</text>
+
+  <!-- Pulse Timing Dimension Calipers (Measurement Callouts) -->
+  <!-- Short Pulse Dimension (over Sym 0 Mark: x=60 to x=80) -->
+  <g transform="translate(60, 95)">
+    <line x1="0" y1="0" x2="20" y2="0" stroke="#fcd34d" stroke-width="1.2"/>
+    <line x1="0" y1="-3" x2="0" y2="3" stroke="#fcd34d" stroke-width="1.2"/>
+    <line x1="20" y1="-3" x2="20" y2="3" stroke="#fcd34d" stroke-width="1.2"/>
+    <text x="10" y="-5" font-family="monospace" font-size="9" font-weight="700" fill="#fcd34d" text-anchor="middle">T (340µs)</text>
+  </g>
+
+  <!-- Long Pulse Dimension (over Sym 1 Mark: x=100 to x=140) -->
+  <g transform="translate(100, 95)">
+    <line x1="0" y1="0" x2="40" y2="0" stroke="#fcd34d" stroke-width="1.2"/>
+    <line x1="0" y1="-3" x2="0" y2="3" stroke="#fcd34d" stroke-width="1.2"/>
+    <line x1="40" y1="-3" x2="40" y2="3" stroke="#fcd34d" stroke-width="1.2"/>
+    <text x="20" y="-5" font-family="monospace" font-size="9" font-weight="700" fill="#fcd34d" text-anchor="middle">2T (680µs)</text>
+  </g>
+
+  <!-- Sync Gap Duration Callout -->
+  <text x="875" y="148" font-family="monospace" font-size="10" font-weight="700" fill="#fde047" text-anchor="middle">~11.9 ms</text>
+  <text x="875" y="178" font-family="system-ui, sans-serif" font-size="9.5" fill="#94a3b8" text-anchor="middle">Sync Space</text>
+
+  <!-- Symbol Markers Below Waveform (y = 175 to 200) -->
+  <!-- Symbols 0 to 5 (Address) -->
+  <g font-family="monospace" font-size="10.5" font-weight="700" text-anchor="middle">
+    <!-- Sym 0: x=60..100 (center 80) -> ss -->
+    <text x="80" y="180" fill="#93c5fd">ss</text>
+    <text x="80" y="194" font-size="8.5" fill="#64748b">Sym 0</text>
+
+    <!-- Sym 1: x=100..160 (center 130) -> Ls -->
+    <text x="130" y="180" fill="#93c5fd">Ls</text>
+    <text x="130" y="194" font-size="8.5" fill="#64748b">Sym 1</text>
+
+    <!-- Sym 2: x=160..240 (center 200) -> LL -->
+    <text x="200" y="180" fill="#93c5fd">LL</text>
+    <text x="200" y="194" font-size="8.5" fill="#64748b">Sym 2</text>
+
+    <!-- Sym 3: x=240..280 (center 260) -> ss -->
+    <text x="260" y="180" fill="#93c5fd">ss</text>
+    <text x="260" y="194" font-size="8.5" fill="#64748b">Sym 3</text>
+
+    <!-- Sym 4: x=280..360 (center 320) -> LL -->
+    <text x="320" y="180" fill="#93c5fd">LL</text>
+    <text x="320" y="194" font-size="8.5" fill="#64748b">Sym 4</text>
+
+    <!-- Sym 5: x=360..420 (center 390) -> sL -->
+    <text x="390" y="180" fill="#93c5fd">sL</text>
+    <text x="390" y="194" font-size="8.5" fill="#64748b">Sym 5</text>
+
+    <!-- Symbols 6 to 11 (Command: Fan High) -->
+    <!-- Sym 6: x=420..460 (center 440) -> ss -->
+    <text x="440" y="180" fill="#5eead4">ss</text>
+    <text x="440" y="194" font-size="8.5" fill="#64748b">Sym 6</text>
+
+    <!-- Sym 7: x=460..540 (center 500) -> LL -->
+    <text x="500" y="180" fill="#5eead4">LL</text>
+    <text x="500" y="194" font-size="8.5" fill="#64748b">Sym 7</text>
+
+    <!-- Sym 8: x=540..600 (center 570) -> sL -->
+    <text x="570" y="180" fill="#5eead4">sL</text>
+    <text x="570" y="194" font-size="8.5" fill="#64748b">Sym 8</text>
+
+    <!-- Sym 9: x=600..660 (center 630) -> sL -->
+    <text x="630" y="180" fill="#5eead4">sL</text>
+    <text x="630" y="194" font-size="8.5" fill="#64748b">Sym 9</text>
+
+    <!-- Sym 10: x=660..720 (center 690) -> sL -->
+    <text x="690" y="180" fill="#5eead4">sL</text>
+    <text x="690" y="194" font-size="8.5" fill="#64748b">Sym 10</text>
+
+    <!-- Sym 11: x=720..780 (center 750) -> sL -->
+    <text x="750" y="180" fill="#5eead4">sL</text>
+    <text x="750" y="194" font-size="8.5" fill="#64748b">Sym 11</text>
+
+    <!-- Trailing Mark: x=780..800 (center 790) -->
+    <text x="790" y="180" fill="#fde047">s</text>
+    <text x="790" y="194" font-size="8.5" fill="#64748b">End</text>
+  </g>
+
+  <!-- ==================== PROTOCOL REVERSE-ENGINEERING MATRIX ==================== -->
+  <g transform="translate(40, 220)">
+    <!-- Container -->
+    <rect x="0" y="0" width="880" height="270" rx="8" fill="url(#cardGrad)" stroke="#272e3d" stroke-width="1.5"/>
+    
+    <!-- Header Row -->
+    <rect x="0" y="0" width="880" height="34" rx="8" fill="#1e2532"/>
+    <line x1="0" y1="34" x2="880" y2="34" stroke="#333f52" stroke-width="1"/>
+    
+    <text x="20" y="22" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#cbd5e1">COMMAND</text>
+    <text x="180" y="22" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#cbd5e1">5-POSITION BARREL SHIFT ENCODING (SYMBOLS 6 TO 11)</text>
+    <text x="660" y="22" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#cbd5e1">TRAILING MARK</text>
+    <text x="775" y="22" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#cbd5e1">PROTOCOL ROLE</text>
+
+    <!-- Row 1: High -->
+    <g transform="translate(0, 36)">
+      <text x="20" y="22" font-family="system-ui, sans-serif" font-size="12.5" font-weight="700" fill="#38bdf8">Fan High (Speed 3)</text>
+      <!-- Symbols: [ss LL] sL sL sL sL -->
+      <rect x="180" y="6" width="68" height="22" rx="4" fill="#133330" stroke="#0d9488" stroke-width="1.2"/>
+      <text x="214" y="21" font-family="monospace" font-size="12" font-weight="700" fill="#5eead4" text-anchor="middle">ss LL</text>
+      <text x="270" y="21" font-family="monospace" font-size="12" fill="#94a3b8">sL   sL   sL   sL</text>
+      <text x="660" y="21" font-family="monospace" font-size="12" font-weight="700" fill="#e2e8f0">Short (310 µs)</text>
+      <text x="775" y="21" font-family="system-ui, sans-serif" font-size="11.5" fill="#94a3b8">Shift Position 0</text>
+      <line x1="10" y1="33" x2="870" y2="33" stroke="#222b3a" stroke-width="1"/>
+    </g>
+
+    <!-- Row 2: Medium -->
+    <g transform="translate(0, 72)">
+      <text x="20" y="22" font-family="system-ui, sans-serif" font-size="12.5" font-weight="700" fill="#38bdf8">Fan Medium (Speed 2)</text>
+      <text x="180" y="21" font-family="monospace" font-size="12" fill="#94a3b8">sL  </text>
+      <rect x="220" y="6" width="68" height="22" rx="4" fill="#133330" stroke="#0d9488" stroke-width="1.2"/>
+      <text x="254" y="21" font-family="monospace" font-size="12" font-weight="700" fill="#5eead4" text-anchor="middle">ss LL</text>
+      <text x="310" y="21" font-family="monospace" font-size="12" fill="#94a3b8">sL   sL   sL</text>
+      <text x="660" y="21" font-family="monospace" font-size="12" font-weight="700" fill="#e2e8f0">Short (309 µs)</text>
+      <text x="775" y="21" font-family="system-ui, sans-serif" font-size="11.5" fill="#94a3b8">Shift Position 1</text>
+      <line x1="10" y1="33" x2="870" y2="33" stroke="#222b3a" stroke-width="1"/>
+    </g>
+
+    <!-- Row 3: Low -->
+    <g transform="translate(0, 108)">
+      <text x="20" y="22" font-family="system-ui, sans-serif" font-size="12.5" font-weight="700" fill="#38bdf8">Fan Low (Speed 1)</text>
+      <text x="180" y="21" font-family="monospace" font-size="12" fill="#94a3b8">sL   sL  </text>
+      <rect x="260" y="6" width="68" height="22" rx="4" fill="#133330" stroke="#0d9488" stroke-width="1.2"/>
+      <text x="294" y="21" font-family="monospace" font-size="12" font-weight="700" fill="#5eead4" text-anchor="middle">ss LL</text>
+      <text x="350" y="21" font-family="monospace" font-size="12" fill="#94a3b8">sL   sL</text>
+      <text x="660" y="21" font-family="monospace" font-size="12" font-weight="700" fill="#e2e8f0">Short (312 µs)</text>
+      <text x="775" y="21" font-family="system-ui, sans-serif" font-size="11.5" fill="#94a3b8">Shift Position 2</text>
+      <line x1="10" y1="33" x2="870" y2="33" stroke="#222b3a" stroke-width="1"/>
+    </g>
+
+    <!-- Row 4: Reverse -->
+    <g transform="translate(0, 144)">
+      <text x="20" y="22" font-family="system-ui, sans-serif" font-size="12.5" font-weight="700" fill="#38bdf8">Fan Reverse Toggle</text>
+      <text x="180" y="21" font-family="monospace" font-size="12" fill="#94a3b8">sL   sL   sL  </text>
+      <rect x="300" y="6" width="68" height="22" rx="4" fill="#133330" stroke="#0d9488" stroke-width="1.2"/>
+      <text x="334" y="21" font-family="monospace" font-size="12" font-weight="700" fill="#5eead4" text-anchor="middle">ss LL</text>
+      <text x="390" y="21" font-family="monospace" font-size="12" fill="#94a3b8">sL</text>
+      <text x="660" y="21" font-family="monospace" font-size="12" font-weight="700" fill="#e2e8f0">Short (311 µs)</text>
+      <text x="775" y="21" font-family="system-ui, sans-serif" font-size="11.5" fill="#94a3b8">Shift Position 3</text>
+      <line x1="10" y1="33" x2="870" y2="33" stroke="#222b3a" stroke-width="1"/>
+    </g>
+
+    <!-- Row 5: Off -->
+    <g transform="translate(0, 180)">
+      <text x="20" y="22" font-family="system-ui, sans-serif" font-size="12.5" font-weight="700" fill="#38bdf8">Fan Power Off</text>
+      <text x="180" y="21" font-family="monospace" font-size="12" fill="#94a3b8">sL   sL   sL   sL  </text>
+      <rect x="340" y="6" width="68" height="22" rx="4" fill="#133330" stroke="#0d9488" stroke-width="1.2"/>
+      <text x="374" y="21" font-family="monospace" font-size="12" font-weight="700" fill="#5eead4" text-anchor="middle">ss LL</text>
+      <text x="660" y="21" font-family="monospace" font-size="12" font-weight="700" fill="#e2e8f0">Short (311 µs)</text>
+      <text x="775" y="21" font-family="system-ui, sans-serif" font-size="11.5" fill="#94a3b8">Shift Position 4</text>
+      <line x1="10" y1="33" x2="870" y2="33" stroke="#222b3a" stroke-width="1"/>
+    </g>
+
+    <!-- Row 6: Light 1 -->
+    <g transform="translate(0, 216)">
+      <text x="20" y="22" font-family="system-ui, sans-serif" font-size="12.5" font-weight="700" fill="#facc15">Light 1 Toggle (L-1)</text>
+      <text x="180" y="21" font-family="monospace" font-size="12" fill="#fde047">sL   sL   ss   LL   sL   ss</text>
+      <rect x="655" y="5" width="105" height="24" rx="4" fill="#38290f" stroke="#ca8a04" stroke-width="1.2"/>
+      <text x="707" y="21" font-family="monospace" font-size="11.5" font-weight="700" fill="#fde047" text-anchor="middle">LONG (645 µs) ★</text>
+      <text x="775" y="21" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#facc15">Light Mode Trigger</text>
+    </g>
+  </g>
+
+</svg>
