@@ -1,16 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 760" width="1000" height="760">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 750" width="1000" height="750">
   <defs>
+    <!-- Background Gradient -->
     <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#121316"/>
-      <stop offset="100%" stop-color="#1a1c22"/>
+      <stop offset="0%" stop-color="#0f1115"/>
+      <stop offset="100%" stop-color="#161822"/>
     </linearGradient>
+
+    <!-- Component PCB Gradients -->
     <linearGradient id="xiaoPcb" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#242830"/>
-      <stop offset="100%" stop-color="#181a20"/>
+      <stop offset="0%" stop-color="#242933"/>
+      <stop offset="100%" stop-color="#181b22"/>
     </linearGradient>
     <linearGradient id="cc1101Pcb" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#1b4975"/>
-      <stop offset="100%" stop-color="#0f2b48"/>
+      <stop offset="0%" stop-color="#183c66"/>
+      <stop offset="100%" stop-color="#0f2642"/>
     </linearGradient>
     <linearGradient id="metalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#d4af37"/>
@@ -18,334 +21,306 @@
       <stop offset="100%" stop-color="#aa820a"/>
     </linearGradient>
     <linearGradient id="usbGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#8e95a5"/>
-      <stop offset="100%" stop-color="#555c6b"/>
+      <stop offset="0%" stop-color="#717988"/>
+      <stop offset="100%" stop-color="#474e5c"/>
     </linearGradient>
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="3" result="blur" />
+
+    <!-- Glow Filters -->
+    <filter id="wireGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2.5" result="blur" />
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
   </defs>
 
-  <!-- Background -->
-  <rect width="1000" height="760" fill="url(#bgGrad)"/>
+  <!-- Background Canvas -->
+  <rect width="1000" height="750" fill="url(#bgGrad)"/>
   
-  <!-- Subtle grid pattern -->
+  <!-- Subtle Blueprint Grid -->
   <g stroke="#ffffff" stroke-opacity="0.03" stroke-width="1">
-    <path d="M0 40 H1000 M0 80 H1000 M0 120 H1000 M0 160 H1000 M0 200 H1000 M0 240 H1000 M0 280 H1000 M0 320 H1000 M0 360 H1000 M0 400 H1000 M0 440 H1000 M0 480 H1000 M0 520 H1000 M0 560 H1000 M0 600 H1000 M0 640 H1000 M0 680 H1000 M0 720 H1000" />
-    <path d="M40 0 V760 M80 0 V760 M120 0 V760 M160 0 V760 M200 0 V760 M240 0 V760 M280 0 V760 M320 0 V760 M360 0 V760 M400 0 V760 M440 0 V760 M480 0 V760 M520 0 V760 M560 0 V760 M600 0 V760 M640 0 V760 M680 0 V760 M720 0 V760 M760 0 V760 M800 0 V760 M840 0 V760 M880 0 V760 M920 0 V760 M960 0 V760" />
+    <path d="M0 50 H1000 M0 100 H1000 M0 150 H1000 M0 200 H1000 M0 250 H1000 M0 300 H1000 M0 350 H1000 M0 400 H1000 M0 450 H1000 M0 500 H1000 M0 550 H1000 M0 600 H1000 M0 650 H1000 M0 700 H1000" />
+    <path d="M50 0 V750 M100 0 V750 M150 0 V750 M200 0 V750 M250 0 V750 M300 0 V750 M350 0 V750 M400 0 V750 M450 0 V750 M500 0 V750 M550 0 V750 M600 0 V750 M650 0 V750 M700 0 V750 M750 0 V750 M800 0 V750 M850 0 V750 M900 0 V750 M950 0 V750" />
   </g>
 
   <!-- Title Header -->
-  <g transform="translate(40, 48)">
-    <text font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="22" font-weight="700" fill="#ecebe6" letter-spacing="0.5">XIAO ESP32-C6 to CC1101 Transceiver Wiring Diagram</text>
-    <text y="24" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="13" fill="#8e9aa8">ESPHome Craftmade Ceiling Fan &amp; Light RF Gateway | SPI &amp; Direct GPIO Control</text>
+  <g transform="translate(40, 42)">
+    <rect x="-10" y="-8" width="4" height="42" fill="#38bdf8" rx="2"/>
+    <text font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="22" font-weight="700" fill="#f8fafc" letter-spacing="0.3">XIAO ESP32-C6 to CC1101 Transceiver Wiring Diagram</text>
+    <text y="24" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="13.5" fill="#94a3b8">ESPHome Craftmade Ceiling Fan &amp; Light RF Gateway | Hardware SPI &amp; Direct OOK Modulation</text>
   </g>
 
-  <!-- ==================== WIRING TRACES (BEZIER) ==================== -->
-  <!-- 
-    Pins on XIAO ESP32-C6 (Right Column, x=290):
-      VBUS: y=168
-      GND: y=200
-      3V3: y=232
-      D10 (GPIO18/MOSI): y=264
-      D9  (GPIO20/MISO): y=296
-      D8  (GPIO19/SCK):  y=328
-      D7  (GPIO17): y=360
-    Pins on XIAO ESP32-C6 (Left Column, x=150):
-      D0: y=168
-      D1: y=200
-      D2: y=232
-      D3 (GPIO21/TX):  y=264
-      D4 (GPIO22/CSN): y=296
-      D5 (GPIO23/RX):  y=328
-      D6 (GPIO16):     y=360
-
-    Pins on CC1101 2x4 Header (Header block at x=730, y=190):
-      Col 1 (x=740): Pin 1 (y=210, GND), Pin 3 (y=236, GDO0), Pin 5 (y=262, SCK),  Pin 7 (y=288, MISO)
-      Col 2 (x=765): Pin 2 (y=210, VCC), Pin 4 (y=236, CSN),  Pin 6 (y=262, MOSI), Pin 8 (y=288, GDO2)
-  -->
-
+  <!-- ==================== WIRING TRACES (BEZIER ROUTING) ==================== -->
   <g id="wires" stroke-linecap="round" stroke-linejoin="round" fill="none">
-    <!-- 1. GND (Wire: Dark Gray/Black with subtle glow) -->
-    <!-- XIAO GND (290, 200) -> CC1101 Pin 1 (740, 210) -->
-    <path d="M 290 200 C 440 200, 580 170, 740 210" stroke="#71717a" stroke-width="3" />
-    <path d="M 290 200 C 440 200, 580 170, 740 210" stroke="#a1a1aa" stroke-width="1.5" />
 
-    <!-- 2. VCC 3.3V (Wire: Red) -->
-    <!-- XIAO 3.3V (290, 232) -> CC1101 Pin 2 (765, 210) -->
-    <path d="M 290 232 C 430 232, 590 150, 765 210" stroke="#dc2626" stroke-width="3.5" />
-    <path d="M 290 232 C 430 232, 590 150, 765 210" stroke="#f87171" stroke-width="1.5" />
+    <!-- 1. GND (Wire: Gray) -> XIAO (325, 165) to CC1101 Pin 1 (685, 160) -->
+    <path d="M 325 165 C 430 165, 570 160, 685 160" stroke="#71717a" stroke-width="3.5" filter="url(#wireGlow)"/>
+    <path d="M 325 165 C 430 165, 570 160, 685 160" stroke="#d4d4d8" stroke-width="1.5"/>
 
-    <!-- 3. GDO0 / RF TX (Wire: Orange) -->
-    <!-- XIAO D3 (150, 264) -> route around bottom -> CC1101 Pin 3 (740, 236) -->
-    <path d="M 150 264 C 90 264, 80 430, 230 430 C 450 430, 580 236, 740 236" stroke="#ea580c" stroke-width="3.5" />
-    <path d="M 150 264 C 90 264, 80 430, 230 430 C 450 430, 580 236, 740 236" stroke="#fb923c" stroke-width="1.5" />
+    <!-- 2. 3.3V VCC (Wire: Red) -> XIAO (325, 200) looping over to CC1101 Pin 2 (805, 160) -->
+    <path d="M 325 200 C 420 200, 520 120, 740 120 C 790 120, 805 135, 805 160" stroke="#dc2626" stroke-width="3.5" filter="url(#wireGlow)"/>
+    <path d="M 325 200 C 420 200, 520 120, 740 120 C 790 120, 805 135, 805 160" stroke="#fca5a5" stroke-width="1.5"/>
 
-    <!-- 4. CSN / SPI CS (Wire: Purple) -->
-    <!-- XIAO D4 (150, 296) -> route around bottom -> CC1101 Pin 4 (765, 236) -->
-    <path d="M 150 296 C 110 296, 95 445, 230 445 C 470 445, 620 220, 765 236" stroke="#9333ea" stroke-width="3.5" />
-    <path d="M 150 296 C 110 296, 95 445, 230 445 C 470 445, 620 220, 765 236" stroke="#c084fc" stroke-width="1.5" />
+    <!-- 3. SCK / SPI Clock (Wire: Amber) -> XIAO D8 (325, 305) to CC1101 Pin 5 (685, 230) -->
+    <path d="M 325 305 C 440 305, 560 230, 685 230" stroke="#d97706" stroke-width="3.5" filter="url(#wireGlow)"/>
+    <path d="M 325 305 C 440 305, 560 230, 685 230" stroke="#fde047" stroke-width="1.5"/>
 
-    <!-- 5. SCK / SPI CLK (Wire: Amber/Yellow) -->
-    <!-- XIAO D8 (290, 328) -> CC1101 Pin 5 (740, 262) -->
-    <path d="M 290 328 C 450 328, 590 262, 740 262" stroke="#d97706" stroke-width="3.5" />
-    <path d="M 290 328 C 450 328, 590 262, 740 262" stroke="#fcd34d" stroke-width="1.5" />
+    <!-- 4. MOSI / Master Out (Wire: Green) -> XIAO D10 (325, 235) to CC1101 Pin 6 (805, 230) -->
+    <path d="M 325 235 C 450 235, 620 215, 750 215 C 790 215, 805 220, 805 230" stroke="#16a34a" stroke-width="3.5" filter="url(#wireGlow)"/>
+    <path d="M 325 235 C 450 235, 620 215, 750 215 C 790 215, 805 220, 805 230" stroke="#86efac" stroke-width="1.5"/>
 
-    <!-- 6. MOSI / SPI Master Out (Wire: Green) -->
-    <!-- XIAO D10 (290, 264) -> CC1101 Pin 6 (765, 262) -->
-    <path d="M 290 264 C 440 264, 600 262, 765 262" stroke="#16a34a" stroke-width="3.5" />
-    <path d="M 290 264 C 440 264, 600 262, 765 262" stroke="#4ade80" stroke-width="1.5" />
+    <!-- 5. MISO / Master In (Wire: Blue) -> XIAO D9 (325, 270) to CC1101 Pin 7 (685, 265) -->
+    <path d="M 325 270 C 440 270, 560 265, 685 265" stroke="#2563eb" stroke-width="3.5" filter="url(#wireGlow)"/>
+    <path d="M 325 270 C 440 270, 560 265, 685 265" stroke="#93c5fd" stroke-width="1.5"/>
 
-    <!-- 7. MISO / SPI Master In (Wire: Blue) -->
-    <!-- XIAO D9 (290, 296) -> CC1101 Pin 7 (740, 288) -->
-    <path d="M 290 296 C 450 296, 580 288, 740 288" stroke="#2563eb" stroke-width="3.5" />
-    <path d="M 290 296 C 450 296, 580 288, 740 288" stroke="#60a5fa" stroke-width="1.5" />
+    <!-- 6. GDO0 / RF TX (Wire: Orange) -> XIAO D3 (165, 235) loops under board to CC1101 Pin 3 (685, 195) -->
+    <path d="M 165 235 C 100 235, 100 405, 240 405 C 480 405, 570 195, 685 195" stroke="#ea580c" stroke-width="3.5" filter="url(#wireGlow)"/>
+    <path d="M 165 235 C 100 235, 100 405, 240 405 C 480 405, 570 195, 685 195" stroke="#fdba74" stroke-width="1.5"/>
 
-    <!-- 8. GDO2 / RF RX (Wire: Cyan/Teal - Dashed: Sniffer / Optional) -->
-    <!-- XIAO D5 (150, 328) -> route around bottom -> CC1101 Pin 8 (765, 288) -->
-    <path d="M 150 328 C 120 328, 110 460, 230 460 C 490 460, 640 280, 765 288" stroke="#0891b2" stroke-width="3" stroke-dasharray="6,4" />
-    <path d="M 150 328 C 120 328, 110 460, 230 460 C 490 460, 640 280, 765 288" stroke="#22d3ee" stroke-width="1.2" stroke-dasharray="6,4" />
+    <!-- 7. CSN / Chip Select (Wire: Purple) -> XIAO D4 (165, 270) loops under board to CC1101 Pin 4 (805, 195) -->
+    <path d="M 165 270 C 115 270, 115 420, 240 420 C 510 420, 710 195, 805 195" stroke="#9333ea" stroke-width="3.5" filter="url(#wireGlow)"/>
+    <path d="M 165 270 C 115 270, 115 420, 240 420 C 510 420, 710 195, 805 195" stroke="#d8b4fe" stroke-width="1.5"/>
+
+    <!-- 8. GDO2 / Sniffer RX (Wire: Cyan Dashed) -> XIAO D5 (165, 305) loops under board to CC1101 Pin 8 (805, 265) -->
+    <path d="M 165 305 C 130 305, 130 435, 240 435 C 540 435, 730 265, 805 265" stroke="#0891b2" stroke-width="3" stroke-dasharray="6,4" filter="url(#wireGlow)"/>
+    <path d="M 165 305 C 130 305, 130 435, 240 435 C 540 435, 730 265, 805 265" stroke="#67e8f9" stroke-width="1.5" stroke-dasharray="6,4"/>
   </g>
 
-  <!-- ==================== COMPONENT 1: XIAO ESP32-C6 ==================== -->
-  <g id="xiao_esp32c6" transform="translate(140, 110)">
+
+  <!-- ==================== COMPONENT 1: SEEED XIAO ESP32-C6 ==================== -->
+  <g id="xiao_board" transform="translate(150, 95)">
     <!-- PCB Base -->
-    <rect x="0" y="20" width="160" height="260" rx="14" fill="url(#xiaoPcb)" stroke="#38404e" stroke-width="2"/>
+    <rect x="0" y="15" width="190" height="280" rx="14" fill="url(#xiaoPcb)" stroke="#384152" stroke-width="2"/>
     
-    <!-- USB-C Connector -->
-    <rect x="45" y="0" width="70" height="28" rx="5" fill="url(#usbGrad)" stroke="#454c59" stroke-width="1.5"/>
-    <rect x="55" y="7" width="50" height="12" rx="3" fill="#1b1d22"/>
+    <!-- USB-C Connector (Top) -->
+    <rect x="60" y="0" width="70" height="24" rx="4" fill="url(#usbGrad)" stroke="#333a46" stroke-width="1.5"/>
+    <rect x="70" y="6" width="50" height="11" rx="3" fill="#181a20"/>
 
-    <!-- RF Shield Can -->
-    <rect x="25" y="60" width="110" height="140" rx="6" fill="#2d323c" stroke="#485162" stroke-width="1.5"/>
-    <text x="80" y="105" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="700" fill="#a4b0c0" text-anchor="middle">seeed studio</text>
-    <text x="80" y="122" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#717d8e" text-anchor="middle">XIAO ESP32-C6</text>
-    <text x="80" y="145" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#586372" text-anchor="middle">RISC-V 160MHz</text>
-    <text x="80" y="160" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#586372" text-anchor="middle">Wi-Fi 6 / BLE 5</text>
+    <!-- RF Metal Shield Can (Center) -->
+    <rect x="45" y="65" width="100" height="125" rx="6" fill="#262b35" stroke="#475164" stroke-width="1.5"/>
+    <text x="95" y="115" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#cbd5e1" text-anchor="middle">seeed studio</text>
+    <text x="95" y="133" font-family="system-ui, sans-serif" font-size="10.5" fill="#94a3b8" text-anchor="middle">XIAO ESP32-C6</text>
+    <text x="95" y="152" font-family="monospace" font-size="9" fill="#64748b" text-anchor="middle">RISC-V 160MHz</text>
 
-    <!-- Ceramic Antenna & U.FL Area -->
-    <rect x="65" y="235" width="30" height="20" rx="2" fill="#5a4c33" stroke="#877045" stroke-width="1"/>
-    <circle cx="40" cy="245" r="5" fill="none" stroke="#d4af37" stroke-width="1.5"/>
-    <circle cx="40" cy="245" r="2" fill="#d4af37"/>
+    <!-- Ceramic Antenna Footprint (Bottom) -->
+    <rect x="80" y="245" width="30" height="22" rx="2" fill="#5a4c33" stroke="#877045" stroke-width="1"/>
+    <circle cx="50" cy="256" r="5" fill="none" stroke="#d4af37" stroke-width="1.5"/>
+    <circle cx="50" cy="256" r="2" fill="#d4af37"/>
 
-    <!-- Left Side Pins (x=10, step=32, start y=58) -->
-    <!-- D0, D1, D2, D3, D4, D5, D6 -->
+    <!-- ----------------- LEFT PINS & EXTERNAL LABELS ----------------- -->
+    <!-- Pins on left edge (x=15) -->
+    
     <!-- D0 -->
-    <circle cx="10" cy="58" r="6" fill="#181a20" stroke="#d4af37" stroke-width="2"/>
-    <text x="24" y="62" font-family="monospace" font-size="10" font-weight="600" fill="#8e9aa8">D0 (GPIO0)</text>
-    <!-- D1 -->
-    <circle cx="10" cy="90" r="6" fill="#181a20" stroke="#d4af37" stroke-width="2"/>
-    <text x="24" y="94" font-family="monospace" font-size="10" font-weight="600" fill="#8e9aa8">D1 (GPIO1)</text>
-    <!-- D2 -->
-    <circle cx="10" cy="122" r="6" fill="#181a20" stroke="#d4af37" stroke-width="2"/>
-    <text x="24" y="126" font-family="monospace" font-size="10" font-weight="600" fill="#8e9aa8">D2 (GPIO2)</text>
-    <!-- D3 -->
-    <circle cx="10" cy="154" r="6" fill="#ea580c" stroke="#fb923c" stroke-width="2.5" filter="url(#glow)"/>
-    <text x="24" y="158" font-family="monospace" font-size="10" font-weight="700" fill="#fb923c">D3 (GPIO21) TX</text>
-    <!-- D4 -->
-    <circle cx="10" cy="186" r="6" fill="#9333ea" stroke="#c084fc" stroke-width="2.5" filter="url(#glow)"/>
-    <text x="24" y="190" font-family="monospace" font-size="10" font-weight="700" fill="#c084fc">D4 (GPIO22) CSN</text>
-    <!-- D5 -->
-    <circle cx="10" cy="218" r="6" fill="#0891b2" stroke="#22d3ee" stroke-width="2.5" filter="url(#glow)"/>
-    <text x="24" y="222" font-family="monospace" font-size="10" font-weight="700" fill="#22d3ee">D5 (GPIO23) RX</text>
-    <!-- D6 -->
-    <circle cx="10" cy="250" r="6" fill="#181a20" stroke="#d4af37" stroke-width="2"/>
-    <text x="24" y="254" font-family="monospace" font-size="10" font-weight="600" fill="#8e9aa8">D6 (GPIO16)</text>
+    <circle cx="15" cy="35" r="5.5" fill="#1e222b" stroke="#64748b" stroke-width="1.5"/>
+    <text x="-8" y="39" font-family="monospace" font-size="11" fill="#64748b" text-anchor="end">D0 (GPIO0)</text>
 
-    <!-- Right Side Pins (x=150, step=32, start y=58) -->
-    <!-- VBUS, GND, 3V3, D10, D9, D8, D7 -->
+    <!-- D1 -->
+    <circle cx="15" cy="70" r="5.5" fill="#1e222b" stroke="#64748b" stroke-width="1.5"/>
+    <text x="-8" y="74" font-family="monospace" font-size="11" fill="#64748b" text-anchor="end">D1 (GPIO1)</text>
+
+    <!-- D2 -->
+    <circle cx="15" cy="105" r="5.5" fill="#1e222b" stroke="#64748b" stroke-width="1.5"/>
+    <text x="-8" y="109" font-family="monospace" font-size="11" fill="#64748b" text-anchor="end">D2 (GPIO2)</text>
+
+    <!-- D3 (TX) -->
+    <circle cx="15" cy="140" r="6.5" fill="#ea580c" stroke="#fdba74" stroke-width="2.5" filter="url(#wireGlow)"/>
+    <rect x="-135" y="126" width="125" height="26" rx="4" fill="#33180c" stroke="#ea580c" stroke-width="1.2"/>
+    <text x="-12" y="143" font-family="monospace" font-size="11" font-weight="700" fill="#fdba74" text-anchor="end">D3 (GPIO21) · TX</text>
+
+    <!-- D4 (CSN) -->
+    <circle cx="15" cy="175" r="6.5" fill="#9333ea" stroke="#d8b4fe" stroke-width="2.5" filter="url(#wireGlow)"/>
+    <rect x="-142" y="161" width="132" height="26" rx="4" fill="#2b143d" stroke="#9333ea" stroke-width="1.2"/>
+    <text x="-12" y="178" font-family="monospace" font-size="11" font-weight="700" fill="#d8b4fe" text-anchor="end">D4 (GPIO22) · CSN</text>
+
+    <!-- D5 (RX) -->
+    <circle cx="15" cy="210" r="6.5" fill="#0891b2" stroke="#67e8f9" stroke-width="2.5" filter="url(#wireGlow)"/>
+    <rect x="-135" y="196" width="125" height="26" rx="4" fill="#0f2933" stroke="#0891b2" stroke-width="1.2"/>
+    <text x="-12" y="213" font-family="monospace" font-size="11" font-weight="700" fill="#67e8f9" text-anchor="end">D5 (GPIO23) · RX</text>
+
+    <!-- D6 -->
+    <circle cx="15" cy="245" r="5.5" fill="#1e222b" stroke="#64748b" stroke-width="1.5"/>
+    <text x="-8" y="249" font-family="monospace" font-size="11" fill="#64748b" text-anchor="end">D6 (GPIO16)</text>
+
+    <!-- ----------------- RIGHT PINS & LABELS ----------------- -->
+    <!-- Pins on right edge (x=175) -->
+
     <!-- VBUS -->
-    <circle cx="150" cy="58" r="6" fill="#181a20" stroke="#d4af37" stroke-width="2"/>
-    <text x="136" y="62" font-family="monospace" font-size="10" font-weight="600" fill="#8e9aa8" text-anchor="end">VBUS (5V)</text>
+    <circle cx="175" cy="35" r="5.5" fill="#1e222b" stroke="#64748b" stroke-width="1.5"/>
+    <text x="162" y="39" font-family="monospace" font-size="10.5" fill="#64748b" text-anchor="end">5V</text>
+
     <!-- GND -->
-    <circle cx="150" cy="90" r="6" fill="#71717a" stroke="#a1a1aa" stroke-width="2.5" filter="url(#glow)"/>
-    <text x="136" y="94" font-family="monospace" font-size="10" font-weight="700" fill="#a1a1aa" text-anchor="end">GND</text>
-    <!-- 3V3 -->
-    <circle cx="150" cy="122" r="6" fill="#dc2626" stroke="#f87171" stroke-width="2.5" filter="url(#glow)"/>
-    <text x="136" y="126" font-family="monospace" font-size="10" font-weight="700" fill="#f87171" text-anchor="end">3.3V OUT</text>
-    <!-- D10 -->
-    <circle cx="150" cy="154" r="6" fill="#16a34a" stroke="#4ade80" stroke-width="2.5" filter="url(#glow)"/>
-    <text x="136" y="158" font-family="monospace" font-size="10" font-weight="700" fill="#4ade80" text-anchor="end">D10 (MOSI)</text>
-    <!-- D9 -->
-    <circle cx="150" cy="186" r="6" fill="#2563eb" stroke="#60a5fa" stroke-width="2.5" filter="url(#glow)"/>
-    <text x="136" y="190" font-family="monospace" font-size="10" font-weight="700" fill="#60a5fa" text-anchor="end">D9 (MISO)</text>
-    <!-- D8 -->
-    <circle cx="150" cy="218" r="6" fill="#d97706" stroke="#fcd34d" stroke-width="2.5" filter="url(#glow)"/>
-    <text x="136" y="222" font-family="monospace" font-size="10" font-weight="700" fill="#fcd34d" text-anchor="end">D8 (SCK)</text>
+    <circle cx="175" cy="70" r="6.5" fill="#71717a" stroke="#d4d4d8" stroke-width="2.5" filter="url(#wireGlow)"/>
+    <text x="162" y="74" font-family="monospace" font-size="11" font-weight="700" fill="#d4d4d8" text-anchor="end">GND</text>
+
+    <!-- 3.3V OUT -->
+    <circle cx="175" cy="105" r="6.5" fill="#dc2626" stroke="#fca5a5" stroke-width="2.5" filter="url(#wireGlow)"/>
+    <text x="162" y="109" font-family="monospace" font-size="11" font-weight="700" fill="#fca5a5" text-anchor="end">3.3V</text>
+
+    <!-- D10 (MOSI) -->
+    <circle cx="175" cy="140" r="6.5" fill="#16a34a" stroke="#86efac" stroke-width="2.5" filter="url(#wireGlow)"/>
+    <text x="162" y="144" font-family="monospace" font-size="11" font-weight="700" fill="#86efac" text-anchor="end">D10</text>
+
+    <!-- D9 (MISO) -->
+    <circle cx="175" cy="175" r="6.5" fill="#2563eb" stroke="#93c5fd" stroke-width="2.5" filter="url(#wireGlow)"/>
+    <text x="162" y="179" font-family="monospace" font-size="11" font-weight="700" fill="#93c5fd" text-anchor="end">D9</text>
+
+    <!-- D8 (SCK) -->
+    <circle cx="175" cy="210" r="6.5" fill="#d97706" stroke="#fde047" stroke-width="2.5" filter="url(#wireGlow)"/>
+    <text x="162" y="214" font-family="monospace" font-size="11" font-weight="700" fill="#fde047" text-anchor="end">D8</text>
+
     <!-- D7 -->
-    <circle cx="150" cy="250" r="6" fill="#181a20" stroke="#d4af37" stroke-width="2"/>
-    <text x="136" y="254" font-family="monospace" font-size="10" font-weight="600" fill="#8e9aa8" text-anchor="end">D7 (GPIO17)</text>
+    <circle cx="175" cy="245" r="5.5" fill="#1e222b" stroke="#64748b" stroke-width="1.5"/>
+    <text x="162" y="249" font-family="monospace" font-size="10.5" fill="#64748b" text-anchor="end">D7</text>
   </g>
+
 
   <!-- ==================== COMPONENT 2: CC1101 MODULE ==================== -->
-  <g id="cc1101_module" transform="translate(710, 160)">
-    <!-- Blue PCB -->
-    <rect x="0" y="0" width="180" height="180" rx="8" fill="url(#cc1101Pcb)" stroke="#2b6cb0" stroke-width="2"/>
+  <g id="cc1101_board" transform="translate(660, 95)">
+    <!-- Blue PCB Base -->
+    <rect x="0" y="15" width="220" height="240" rx="10" fill="url(#cc1101Pcb)" stroke="#2563eb" stroke-width="2"/>
     
-    <!-- Silk Text -->
-    <text x="80" y="24" font-family="monospace" font-size="11" font-weight="700" fill="#ffffff" letter-spacing="1">CC1101 V2.0</text>
-    <text x="80" y="40" font-family="monospace" font-size="10" fill="#90cdf4">303.875 MHz</text>
+    <!-- Silk Title on Module -->
+    <text x="145" y="44" font-family="monospace" font-size="12" font-weight="700" fill="#ffffff" letter-spacing="0.5">CC1101 V2.0</text>
+    <text x="145" y="60" font-family="monospace" font-size="10.5" fill="#93c5fd">303.875 MHz</text>
 
-    <!-- TI CC1101 QFN Chip -->
-    <rect x="90" y="65" width="45" height="45" rx="2" fill="#1a202c" stroke="#4a5568" stroke-width="1.5"/>
-    <text x="112" y="86" font-family="monospace" font-size="7" fill="#cbd5e0" text-anchor="middle">TI CC1101</text>
-    <text x="112" y="98" font-family="monospace" font-size="6" fill="#a0aec0" text-anchor="middle">Sub-1GHz</text>
+    <!-- TI CC1101 IC -->
+    <rect x="155" y="85" width="48" height="48" rx="3" fill="#181c24" stroke="#475569" stroke-width="1.5"/>
+    <text x="179" y="107" font-family="monospace" font-size="8" fill="#e2e8f0" text-anchor="middle">TI CC1101</text>
+    <text x="179" y="120" font-family="monospace" font-size="7" fill="#94a3b8" text-anchor="middle">Sub-1GHz</text>
 
-    <!-- Crystal Oscillator -->
-    <rect x="95" y="125" width="32" height="22" rx="2" fill="#cbd5e0" stroke="#718096" stroke-width="1"/>
-    <text x="111" y="139" font-family="monospace" font-size="7" fill="#2d3748" text-anchor="middle">26.000</text>
+    <!-- 26.000 MHz Crystal -->
+    <rect x="160" y="150" width="38" height="24" rx="2" fill="#cbd5e1" stroke="#64748b" stroke-width="1"/>
+    <text x="179" y="166" font-family="monospace" font-size="8" font-weight="700" fill="#1e293b" text-anchor="middle">26.000</text>
 
-    <!-- SMA RF Connector Base -->
-    <path d="M 180 65 L 205 65 L 205 115 L 180 115 Z" fill="url(#metalGrad)" stroke="#8d6e0a" stroke-width="1.5"/>
-    <!-- Threaded SMA Barrel -->
-    <rect x="205" y="72" width="22" height="36" rx="2" fill="url(#metalGrad)" stroke="#8d6e0a" stroke-width="1.5"/>
-    <!-- SMA Antenna Whip -->
-    <rect x="227" y="78" width="55" height="24" rx="4" fill="#2d3748" stroke="#1a202c" stroke-width="1"/>
-    <path d="M 235 78 V 102 M 245 78 V 102 M 255 78 V 102" stroke="#4a5568" stroke-width="1"/>
+    <!-- SMA RF Connector (Right) -->
+    <path d="M 220 85 L 245 85 L 245 135 L 220 135 Z" fill="url(#metalGrad)" stroke="#854d0e" stroke-width="1.5"/>
+    <rect x="245" y="92" width="22" height="36" rx="2" fill="url(#metalGrad)" stroke="#854d0e" stroke-width="1.5"/>
+    <!-- Antenna Whip -->
+    <rect x="267" y="98" width="55" height="24" rx="4" fill="#1e2430" stroke="#334155" stroke-width="1.2"/>
+    <path d="M 277 98 V 122 M 287 98 V 122 M 297 98 V 122" stroke="#475569" stroke-width="1"/>
 
-    <!-- 2x4 Female Header (x=20 to x=65, y=40 to y=140) -->
-    <rect x="18" y="38" width="48" height="110" rx="4" fill="#171923" stroke="#4a5568" stroke-width="1.5"/>
+    <!-- ==================== 2x4 PIN HEADER BREAKOUT SOCKET ==================== -->
+    <!-- Positioned cleanly inside the module from x=15 to x=150 -->
+    <rect x="15" y="45" width="140" height="185" rx="6" fill="#111827" stroke="#374151" stroke-width="1.5"/>
+    <text x="85" y="60" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#94a3b8" text-anchor="middle">2x4 PIN HEADER</text>
 
-    <!-- Pins: Pin 1 to 8 -->
-    <!-- Col 1 (x=30): 1(y=50), 3(y=76), 5(y=102), 7(y=128) -->
-    <!-- Col 2 (x=55): 2(y=50), 4(y=76), 6(y=102), 8(y=128) -->
-    
-    <!-- Pin 1: GND -->
-    <circle cx="30" cy="50" r="5" fill="#71717a" stroke="#a1a1aa" stroke-width="2" filter="url(#glow)"/>
-    <text x="30" y="32" font-family="monospace" font-size="9" font-weight="700" fill="#a1a1aa" text-anchor="middle">1 GND</text>
+    <!-- Row 1: Pin 1 (GND) & Pin 2 (VCC) -> y=65 rel (y=160 abs) -->
+    <!-- Col 1: Pin 1 (GND) -->
+    <circle cx="25" cy="65" r="6.5" fill="#71717a" stroke="#d4d4d8" stroke-width="2.5" filter="url(#wireGlow)"/>
+    <text x="36" y="69" font-family="monospace" font-size="10.5" font-weight="700" fill="#d4d4d8">1:GND</text>
+    <!-- Col 2: Pin 2 (VCC) -->
+    <text x="134" y="69" font-family="monospace" font-size="10.5" font-weight="700" fill="#fca5a5" text-anchor="end">2:VCC</text>
+    <circle cx="145" cy="65" r="6.5" fill="#dc2626" stroke="#fca5a5" stroke-width="2.5" filter="url(#wireGlow)"/>
 
-    <!-- Pin 2: VCC -->
-    <circle cx="55" cy="50" r="5" fill="#dc2626" stroke="#f87171" stroke-width="2" filter="url(#glow)"/>
-    <text x="55" y="32" font-family="monospace" font-size="9" font-weight="700" fill="#f87171" text-anchor="middle">2 VCC</text>
+    <!-- Row 2: Pin 3 (GDO0) & Pin 4 (CSN) -> y=100 rel (y=195 abs) -->
+    <!-- Col 1: Pin 3 (GDO0) -->
+    <circle cx="25" cy="100" r="6.5" fill="#ea580c" stroke="#fdba74" stroke-width="2.5" filter="url(#wireGlow)"/>
+    <text x="36" y="104" font-family="monospace" font-size="10.5" font-weight="700" fill="#fdba74">3:GDO0</text>
+    <!-- Col 2: Pin 4 (CSN) -->
+    <text x="134" y="104" font-family="monospace" font-size="10.5" font-weight="700" fill="#d8b4fe" text-anchor="end">4:CSN</text>
+    <circle cx="145" cy="100" r="6.5" fill="#9333ea" stroke="#d8b4fe" stroke-width="2.5" filter="url(#wireGlow)"/>
 
-    <!-- Pin 3: GDO0 -->
-    <circle cx="30" cy="76" r="5" fill="#ea580c" stroke="#fb923c" stroke-width="2" filter="url(#glow)"/>
-    <text x="12" y="79" font-family="monospace" font-size="8" font-weight="700" fill="#fb923c" text-anchor="end">3 GDO0</text>
+    <!-- Row 3: Pin 5 (SCK) & Pin 6 (MOSI) -> y=135 rel (y=230 abs) -->
+    <!-- Col 1: Pin 5 (SCK) -->
+    <circle cx="25" cy="135" r="6.5" fill="#d97706" stroke="#fde047" stroke-width="2.5" filter="url(#wireGlow)"/>
+    <text x="36" y="139" font-family="monospace" font-size="10.5" font-weight="700" fill="#fde047">5:SCK</text>
+    <!-- Col 2: Pin 6 (MOSI) -->
+    <text x="134" y="139" font-family="monospace" font-size="10.5" font-weight="700" fill="#86efac" text-anchor="end">6:MOSI</text>
+    <circle cx="145" cy="135" r="6.5" fill="#16a34a" stroke="#86efac" stroke-width="2.5" filter="url(#wireGlow)"/>
 
-    <!-- Pin 4: CSN -->
-    <circle cx="55" cy="76" r="5" fill="#9333ea" stroke="#c084fc" stroke-width="2" filter="url(#glow)"/>
-    <text x="70" y="79" font-family="monospace" font-size="8" font-weight="700" fill="#c084fc" text-anchor="start">4 CSN</text>
-
-    <!-- Pin 5: SCK -->
-    <circle cx="30" cy="102" r="5" fill="#d97706" stroke="#fcd34d" stroke-width="2" filter="url(#glow)"/>
-    <text x="12" y="105" font-family="monospace" font-size="8" font-weight="700" fill="#fcd34d" text-anchor="end">5 SCK</text>
-
-    <!-- Pin 6: MOSI -->
-    <circle cx="55" cy="102" r="5" fill="#16a34a" stroke="#4ade80" stroke-width="2" filter="url(#glow)"/>
-    <text x="70" y="105" font-family="monospace" font-size="8" font-weight="700" fill="#4ade80" text-anchor="start">6 MOSI</text>
-
-    <!-- Pin 7: MISO -->
-    <circle cx="30" cy="128" r="5" fill="#2563eb" stroke="#60a5fa" stroke-width="2" filter="url(#glow)"/>
-    <text x="12" y="131" font-family="monospace" font-size="8" font-weight="700" fill="#60a5fa" text-anchor="end">7 MISO</text>
-
-    <!-- Pin 8: GDO2 -->
-    <circle cx="55" cy="128" r="5" fill="#0891b2" stroke="#22d3ee" stroke-width="2" filter="url(#glow)"/>
-    <text x="70" y="131" font-family="monospace" font-size="8" font-weight="700" fill="#22d3ee" text-anchor="start">8 GDO2</text>
+    <!-- Row 4: Pin 7 (MISO) & Pin 8 (GDO2) -> y=170 rel (y=265 abs) -->
+    <!-- Col 1: Pin 7 (MISO) -->
+    <circle cx="25" cy="170" r="6.5" fill="#2563eb" stroke="#93c5fd" stroke-width="2.5" filter="url(#wireGlow)"/>
+    <text x="36" y="174" font-family="monospace" font-size="10.5" font-weight="700" fill="#93c5fd">7:MISO</text>
+    <!-- Col 2: Pin 8 (GDO2) -->
+    <text x="134" y="174" font-family="monospace" font-size="10.5" font-weight="700" fill="#67e8f9" text-anchor="end">8:GDO2</text>
+    <circle cx="145" cy="170" r="6.5" fill="#0891b2" stroke="#67e8f9" stroke-width="2.5" filter="url(#wireGlow)"/>
   </g>
 
+
   <!-- ==================== PINOUT MAPPING TABLE ==================== -->
-  <g id="mapping_table" transform="translate(40, 500)">
-    <!-- Table Container -->
-    <rect x="0" y="0" width="920" height="225" rx="8" fill="#1e222b" stroke="#333b49" stroke-width="1.5"/>
+  <g id="mapping_table" transform="translate(40, 480)">
+    <!-- Container -->
+    <rect x="0" y="0" width="920" height="245" rx="8" fill="#171a22" stroke="#2e3542" stroke-width="1.5"/>
     
-    <!-- Header Row -->
-    <rect x="0" y="0" width="920" height="34" rx="8" fill="#282f3d"/>
-    <line x1="0" y1="34" x2="920" y2="34" stroke="#3e485a" stroke-width="1"/>
+    <!-- Table Header Row -->
+    <rect x="0" y="0" width="920" height="34" rx="8" fill="#222733"/>
+    <line x1="0" y1="34" x2="920" y2="34" stroke="#374151" stroke-width="1"/>
     
-    <!-- Column Titles -->
-    <text x="25"  y="22" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#94a3b8">SIGNAL NAME</text>
-    <text x="175" y="22" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#94a3b8">XIAO ESP32-C6 PIN</text>
-    <text x="345" y="22" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#94a3b8">GPIO NUMBER</text>
-    <text x="495" y="22" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#94a3b8">CC1101 MODULE PIN</text>
-    <text x="670" y="22" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#94a3b8">ROLE &amp; OPERATIONAL NOTES</text>
+    <!-- Header Labels -->
+    <text x="25"  y="22" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700" fill="#94a3b8">SIGNAL NAME</text>
+    <text x="175" y="22" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700" fill="#94a3b8">XIAO ESP32-C6 PIN</text>
+    <text x="345" y="22" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700" fill="#94a3b8">GPIO NUMBER</text>
+    <text x="485" y="22" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700" fill="#94a3b8">CC1101 MODULE PIN</text>
+    <text x="660" y="22" font-family="system-ui, sans-serif" font-size="11.5" font-weight="700" fill="#94a3b8">ROLE &amp; OPERATIONAL NOTES</text>
 
-    <!-- Table Rows -->
-    <!-- Row 1: VCC -->
-    <g transform="translate(0, 34)">
-      <circle cx="12" cy="12" r="4" fill="#dc2626"/>
-      <text x="25" y="16" font-family="monospace" font-size="11" font-weight="700" fill="#f87171">VCC (3.3V)</text>
-      <text x="175" y="16" font-family="monospace" font-size="11" fill="#e2e8f0">3.3V-OUT</text>
-      <text x="345" y="16" font-family="monospace" font-size="11" fill="#94a3b8">—</text>
-      <text x="495" y="16" font-family="monospace" font-size="11" fill="#f87171">Pin 2 (VCC)</text>
-      <text x="670" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#cbd5e1">Regulated 3.3V power (DO NOT connect to 5V!)</text>
-      <line x1="10" y1="24" x2="910" y2="24" stroke="#2a3240" stroke-width="1"/>
-    </g>
+    <!-- Row 1: VCC (y=48) -->
+    <circle cx="14" cy="48" r="4.5" fill="#dc2626"/>
+    <text x="26" y="52" font-family="monospace" font-size="11.5" font-weight="700" fill="#fca5a5">VCC (3.3V)</text>
+    <text x="175" y="52" font-family="monospace" font-size="11.5" fill="#e2e8f0">3.3V-OUT</text>
+    <text x="345" y="52" font-family="monospace" font-size="11.5" fill="#94a3b8">—</text>
+    <text x="485" y="52" font-family="monospace" font-size="11.5" font-weight="700" fill="#fca5a5">Pin 2 (VCC)</text>
+    <text x="660" y="52" font-family="system-ui, sans-serif" font-size="11.5" fill="#cbd5e1">Regulated 3.3V logic &amp; RF power (NEVER connect to 5V!)</text>
+    <line x1="10" y1="60" x2="910" y2="60" stroke="#252b37" stroke-width="1"/>
 
-    <!-- Row 2: GND -->
-    <g transform="translate(0, 58)">
-      <circle cx="12" cy="12" r="4" fill="#71717a"/>
-      <text x="25" y="16" font-family="monospace" font-size="11" font-weight="700" fill="#a1a1aa">GND</text>
-      <text x="175" y="16" font-family="monospace" font-size="11" fill="#e2e8f0">GND</text>
-      <text x="345" y="16" font-family="monospace" font-size="11" fill="#94a3b8">—</text>
-      <text x="495" y="16" font-family="monospace" font-size="11" fill="#a1a1aa">Pin 1 (GND)</text>
-      <text x="670" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#cbd5e1">Common ground reference</text>
-      <line x1="10" y1="24" x2="910" y2="24" stroke="#2a3240" stroke-width="1"/>
-    </g>
+    <!-- Row 2: GND (y=74) -->
+    <circle cx="14" cy="74" r="4.5" fill="#71717a"/>
+    <text x="26" y="78" font-family="monospace" font-size="11.5" font-weight="700" fill="#d4d4d8">GND</text>
+    <text x="175" y="78" font-family="monospace" font-size="11.5" fill="#e2e8f0">GND</text>
+    <text x="345" y="78" font-family="monospace" font-size="11.5" fill="#94a3b8">—</text>
+    <text x="485" y="78" font-family="monospace" font-size="11.5" font-weight="700" fill="#d4d4d8">Pin 1 (GND)</text>
+    <text x="660" y="78" font-family="system-ui, sans-serif" font-size="11.5" fill="#cbd5e1">Common ground reference</text>
+    <line x1="10" y1="86" x2="910" y2="86" stroke="#252b37" stroke-width="1"/>
 
-    <!-- Row 3: SCK -->
-    <g transform="translate(0, 82)">
-      <circle cx="12" cy="12" r="4" fill="#d97706"/>
-      <text x="25" y="16" font-family="monospace" font-size="11" font-weight="700" fill="#fcd34d">SPI SCK</text>
-      <text x="175" y="16" font-family="monospace" font-size="11" fill="#e2e8f0">D8</text>
-      <text x="345" y="16" font-family="monospace" font-size="11" fill="#fcd34d">GPIO19</text>
-      <text x="495" y="16" font-family="monospace" font-size="11" fill="#fcd34d">Pin 5 (SCK)</text>
-      <text x="670" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#cbd5e1">SPI Bus Clock</text>
-      <line x1="10" y1="24" x2="910" y2="24" stroke="#2a3240" stroke-width="1"/>
-    </g>
+    <!-- Row 3: SCK (y=100) -->
+    <circle cx="14" cy="100" r="4.5" fill="#d97706"/>
+    <text x="26" y="104" font-family="monospace" font-size="11.5" font-weight="700" fill="#fde047">SPI SCK</text>
+    <text x="175" y="104" font-family="monospace" font-size="11.5" fill="#e2e8f0">D8</text>
+    <text x="345" y="104" font-family="monospace" font-size="11.5" fill="#fde047">GPIO19</text>
+    <text x="485" y="104" font-family="monospace" font-size="11.5" font-weight="700" fill="#fde047">Pin 5 (SCK)</text>
+    <text x="660" y="104" font-family="system-ui, sans-serif" font-size="11.5" fill="#cbd5e1">SPI Bus Clock line</text>
+    <line x1="10" y1="112" x2="910" y2="112" stroke="#252b37" stroke-width="1"/>
 
-    <!-- Row 4: MOSI -->
-    <g transform="translate(0, 106)">
-      <circle cx="12" cy="12" r="4" fill="#16a34a"/>
-      <text x="25" y="16" font-family="monospace" font-size="11" font-weight="700" fill="#4ade80">SPI MOSI</text>
-      <text x="175" y="16" font-family="monospace" font-size="11" fill="#e2e8f0">D10</text>
-      <text x="345" y="16" font-family="monospace" font-size="11" fill="#4ade80">GPIO18</text>
-      <text x="495" y="16" font-family="monospace" font-size="11" fill="#4ade80">Pin 6 (MOSI)</text>
-      <text x="670" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#cbd5e1">SPI Master Out / Slave In</text>
-      <line x1="10" y1="24" x2="910" y2="24" stroke="#2a3240" stroke-width="1"/>
-    </g>
+    <!-- Row 4: MOSI (y=126) -->
+    <circle cx="14" cy="126" r="4.5" fill="#16a34a"/>
+    <text x="26" y="130" font-family="monospace" font-size="11.5" font-weight="700" fill="#86efac">SPI MOSI</text>
+    <text x="175" y="130" font-family="monospace" font-size="11.5" fill="#e2e8f0">D10</text>
+    <text x="345" y="130" font-family="monospace" font-size="11.5" fill="#86efac">GPIO18</text>
+    <text x="485" y="130" font-family="monospace" font-size="11.5" font-weight="700" fill="#86efac">Pin 6 (MOSI)</text>
+    <text x="660" y="130" font-family="system-ui, sans-serif" font-size="11.5" fill="#cbd5e1">SPI Master Out / Slave In (Register configuration)</text>
+    <line x1="10" y1="138" x2="910" y2="138" stroke="#252b37" stroke-width="1"/>
 
-    <!-- Row 5: MISO -->
-    <g transform="translate(0, 130)">
-      <circle cx="12" cy="12" r="4" fill="#2563eb"/>
-      <text x="25" y="16" font-family="monospace" font-size="11" font-weight="700" fill="#60a5fa">SPI MISO</text>
-      <text x="175" y="16" font-family="monospace" font-size="11" fill="#e2e8f0">D9</text>
-      <text x="345" y="16" font-family="monospace" font-size="11" fill="#60a5fa">GPIO20</text>
-      <text x="495" y="16" font-family="monospace" font-size="11" fill="#60a5fa">Pin 7 (MISO)</text>
-      <text x="670" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#cbd5e1">SPI Master In / Slave Out</text>
-      <line x1="10" y1="24" x2="910" y2="24" stroke="#2a3240" stroke-width="1"/>
-    </g>
+    <!-- Row 5: MISO (y=152) -->
+    <circle cx="14" cy="152" r="4.5" fill="#2563eb"/>
+    <text x="26" y="156" font-family="monospace" font-size="11.5" font-weight="700" fill="#93c5fd">SPI MISO</text>
+    <text x="175" y="156" font-family="monospace" font-size="11.5" fill="#e2e8f0">D9</text>
+    <text x="345" y="156" font-family="monospace" font-size="11.5" fill="#93c5fd">GPIO20</text>
+    <text x="485" y="156" font-family="monospace" font-size="11.5" font-weight="700" fill="#93c5fd">Pin 7 (MISO)</text>
+    <text x="660" y="156" font-family="system-ui, sans-serif" font-size="11.5" fill="#cbd5e1">SPI Master In / Slave Out (Status verification)</text>
+    <line x1="10" y1="164" x2="910" y2="164" stroke="#252b37" stroke-width="1"/>
 
-    <!-- Row 6: CSN -->
-    <g transform="translate(0, 154)">
-      <circle cx="12" cy="12" r="4" fill="#9333ea"/>
-      <text x="25" y="16" font-family="monospace" font-size="11" font-weight="700" fill="#c084fc">SPI CSN</text>
-      <text x="175" y="16" font-family="monospace" font-size="11" fill="#e2e8f0">D4</text>
-      <text x="345" y="16" font-family="monospace" font-size="11" fill="#c084fc">GPIO22</text>
-      <text x="495" y="16" font-family="monospace" font-size="11" fill="#c084fc">Pin 4 (CSN)</text>
-      <text x="670" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#cbd5e1">Chip Select (Active LOW)</text>
-      <line x1="10" y1="24" x2="910" y2="24" stroke="#2a3240" stroke-width="1"/>
-    </g>
+    <!-- Row 6: CSN (y=178) -->
+    <circle cx="14" cy="178" r="4.5" fill="#9333ea"/>
+    <text x="26" y="182" font-family="monospace" font-size="11.5" font-weight="700" fill="#d8b4fe">SPI CSN</text>
+    <text x="175" y="182" font-family="monospace" font-size="11.5" fill="#e2e8f0">D4</text>
+    <text x="345" y="182" font-family="monospace" font-size="11.5" fill="#d8b4fe">GPIO22</text>
+    <text x="485" y="182" font-family="monospace" font-size="11.5" font-weight="700" fill="#d8b4fe">Pin 4 (CSN)</text>
+    <text x="660" y="182" font-family="system-ui, sans-serif" font-size="11.5" fill="#cbd5e1">Chip Select (Active LOW bus select)</text>
+    <line x1="10" y1="190" x2="910" y2="190" stroke="#252b37" stroke-width="1"/>
 
-    <!-- Row 7: GDO0 / TX -->
-    <g transform="translate(0, 178)">
-      <circle cx="12" cy="12" r="4" fill="#ea580c"/>
-      <text x="25" y="16" font-family="monospace" font-size="11" font-weight="700" fill="#fb923c">RF TX (GDO0)</text>
-      <text x="175" y="16" font-family="monospace" font-size="11" fill="#e2e8f0">D3</text>
-      <text x="345" y="16" font-family="monospace" font-size="11" fill="#fb923c">GPIO21</text>
-      <text x="495" y="16" font-family="monospace" font-size="11" fill="#fb923c">Pin 3 (GDO0)</text>
-      <text x="670" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#cbd5e1">Direct OOK modulation input for transmission</text>
-      <line x1="10" y1="24" x2="910" y2="24" stroke="#2a3240" stroke-width="1"/>
-    </g>
+    <!-- Row 7: GDO0 / TX (y=204) -->
+    <circle cx="14" cy="204" r="4.5" fill="#ea580c"/>
+    <text x="26" y="208" font-family="monospace" font-size="11.5" font-weight="700" fill="#fdba74">RF TX (GDO0)</text>
+    <text x="175" y="208" font-family="monospace" font-size="11.5" fill="#e2e8f0">D3</text>
+    <text x="345" y="208" font-family="monospace" font-size="11.5" fill="#fdba74">GPIO21</text>
+    <text x="485" y="208" font-family="monospace" font-size="11.5" font-weight="700" fill="#fdba74">Pin 3 (GDO0)</text>
+    <text x="660" y="208" font-family="system-ui, sans-serif" font-size="11.5" fill="#cbd5e1">Direct OOK modulation input for transmission</text>
+    <line x1="10" y1="216" x2="910" y2="216" stroke="#252b37" stroke-width="1"/>
 
-    <!-- Row 8: GDO2 / RX -->
-    <g transform="translate(0, 202)">
-      <circle cx="12" cy="12" r="4" fill="#0891b2"/>
-      <text x="25" y="16" font-family="monospace" font-size="11" font-weight="700" fill="#22d3ee">RF RX (GDO2)</text>
-      <text x="175" y="16" font-family="monospace" font-size="11" fill="#e2e8f0">D5</text>
-      <text x="345" y="16" font-family="monospace" font-size="11" fill="#22d3ee">GPIO23</text>
-      <text x="495" y="16" font-family="monospace" font-size="11" fill="#22d3ee">Pin 8 (GDO2)</text>
-      <text x="670" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#cbd5e1">Demodulated OOK output (used for remote sniffing)</text>
-    </g>
+    <!-- Row 8: GDO2 / RX (y=230) -->
+    <circle cx="14" cy="230" r="4.5" fill="#0891b2"/>
+    <text x="26" y="234" font-family="monospace" font-size="11.5" font-weight="700" fill="#67e8f9">RF RX (GDO2)</text>
+    <text x="175" y="234" font-family="monospace" font-size="11.5" fill="#e2e8f0">D5</text>
+    <text x="345" y="234" font-family="monospace" font-size="11.5" fill="#67e8f9">GPIO23</text>
+    <text x="485" y="234" font-family="monospace" font-size="11.5" font-weight="700" fill="#67e8f9">Pin 8 (GDO2)</text>
+    <text x="660" y="234" font-family="system-ui, sans-serif" font-size="11.5" fill="#cbd5e1">Demodulated OOK output (used for sniffer / timing analysis)</text>
   </g>
 </svg>
