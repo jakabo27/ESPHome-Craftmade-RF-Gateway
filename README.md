@@ -14,33 +14,21 @@ The original physical wall remote continues to operate normally with zero modifi
 
 ## Architecture Overview
 
-```
-                          ┌───────────────────────────┐
-                          │   Home Assistant Server   │
-                          │   (Dashboard & Automations│
-                          └─────────────┬─────────────┘
-                                        │
-                                        │  Wi-Fi (Native API :6053)
-                                        │  Modem Sleep (<10ms latency)
-                                        ▼
-┌─────────────────────────┐   ┌───────────────────────────┐
-│  Craftmade Wall Remote  │   │     ESPHome RF Gateway    │
-│  (Original 12V Battery) │   │  (XIAO ESP32-C6 + CC1101) │
-└────────────┬────────────┘   └─────────────┬─────────────┘
-             │                              │
-             │   303.875 MHz OOK Bursts     │   303.875 MHz OOK Bursts
-             │   (6x Repeats)               │   (6x Repeats)
-             └──────────────────┬───────────┘
-                                │
-                                ▼
-                  ┌───────────────────────────┐
-                  │    Ceiling Fan Canopy     │
-                  │   303.875 MHz Receiver    │
-                  │   Motor Speeds & Light    │
-                  └───────────────────────────┘
-```
-
 ![System Architecture](media/diagrams/architecture-dark.svg)
+
+---
+
+## Photos & Prototypes
+
+| Original Wall Remote | CC1101 Transceiver Module |
+| :---: | :---: |
+| ![Wall Remote](media/hardware/Fan%20Control%20Wall%20Remote.jpg) | ![CC1101 Module](media/hardware/Module%20image.jpg) |
+| *Craftmade 7-button wall controller (Model 12V)* | *TI CC1101 with SMA Antenna port* |
+
+| Prototype Wiring Setup | 3D Printed Enclosure |
+| :---: | :---: |
+| ![Wired Setup](media/hardware/setup-wired-placeholder.png) | ![3D Enclosure](media/hardware/setup-enclosure-placeholder.png) |
+| *Soldered breadboard / jumper prototype* | *Custom compact wall/shelf housing* |
 
 ---
 
@@ -90,20 +78,6 @@ The Texas Instruments CC1101 communicates with the ESP32-C6 via hardware SPI. In
 | **SPI CSN** | `D4` | `GPIO22` | **Pin 4** (`CSN`) | 🟣 Purple | SPI Chip Select (Active LOW) |
 | **RF TX (GDO0)** | `D3` | `GPIO21` | **Pin 3** (`GDO0`) | 🟠 Orange | Direct Carrier Modulation Output |
 | **RF RX (GDO2)** | `D5` | `GPIO23` | **Pin 8** (`GDO2`) | 🔵 Cyan (Dashed) | Demodulated OOK Receiver (Sniffer) |
-
----
-
-## Photos & Prototypes
-
-| Original Wall Remote | CC1101 Transceiver Module |
-| :---: | :---: |
-| ![Wall Remote](media/hardware/Fan%20Control%20Wall%20Remote.jpg) | ![CC1101 Module](media/hardware/Module%20image.jpg) |
-| *Craftmade 7-button wall controller (Model 12V)* | *TI CC1101 with SMA Antenna port* |
-
-| Prototype Wiring Setup | 3D Printed Enclosure |
-| :---: | :---: |
-| ![Wired Setup](media/hardware/setup-wired-placeholder.png) | ![3D Enclosure](media/hardware/setup-enclosure-placeholder.png) |
-| *Soldered breadboard / jumper prototype* | *Custom compact wall/shelf housing* |
 
 ---
 
