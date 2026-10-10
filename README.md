@@ -27,8 +27,8 @@ The original physical wall remote continues to operate normally with zero modifi
 
 | Prototype Wiring Setup | 3D Printed Enclosure |
 | :---: | :---: |
-| ![Wired Setup](media/hardware/setup-wired-placeholder.png) | ![3D Enclosure](media/hardware/setup-enclosure.jpg) |
-| *Soldered breadboard / jumper prototype* | *Final build in its 3D-printed case, SMA antenna and USB-C power out the side* |
+| ![Wired Setup](media/hardware/setup-prototype.jpg) | ![3D Enclosure](media/hardware/setup-enclosure.jpg) |
+| *Working prototype: XIAO ESP32-C6 and CC1101 on a mini breadboard with jumper wires* | *Final build in its 3D-printed case, SMA antenna and USB-C power out the side* |
 
 ---
 
