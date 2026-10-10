@@ -180,6 +180,14 @@ The [`tools/`](tools/) folder contains the Python scripts used during reverse en
 
 ---
 
+## What It Looks Like in Home Assistant
+
+The device page in Home Assistant, with the fan, light, per-speed buttons, the resync button and the diagnostic sensors all discovered automatically. (IP address, BSSID and MAC are blanked out.)
+
+![ESPHome device page in Home Assistant](media/screenshots/ha-device-page.png)
+
+---
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
