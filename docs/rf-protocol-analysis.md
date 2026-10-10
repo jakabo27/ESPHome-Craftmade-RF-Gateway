@@ -100,3 +100,35 @@ These exact arrays were computed from sniffer logs using `tools/analyze_signals.
 # Fan Off
 [335, -347, 651, -362, 648, -708, 310, -361, 647, -708, 308, -708, 304, -707, 307, -707, 310, -708, 305, -708, 309, -363, 651, -702, 311, -11902]
 ```
+
+---
+
+## 5. Receive-Side Decoding (Keeping Home Assistant in Sync)
+
+The gateway also listens, so presses on the original remote update Home Assistant. Because the CC1101 receive path measures slightly different absolute widths than the transmit timings above (for example a short mark reads about 250 µs and a long mark about 600 µs instead of 330 / 650), the firmware does **not** match exact microsecond values. It classifies each pulse as short or long using a threshold and compares the resulting symbol pattern.
+
+* **Mark threshold:** `> 450 µs` is long.
+* **Space threshold:** `> 560 µs` is long.
+* **Frame boundary:** a space longer than `5 ms` separates repeats of the frame.
+* **Pairs:** each mark and the space after it form a pair, giving one of four symbols:
+
+| Key | Mark / Space |
+| :---: | :--- |
+| `a` | short / short (`ss`) |
+| `b` | long / short (`Ls`) |
+| `c` | long / long (`LL`) |
+| `d` | short / long (`sL`) |
+
+The first 12 pairs of a frame are the address and command words. Captured from the physical remote, they decode to:
+
+| Press | Key (12 pairs) |
+| :--- | :--- |
+| Fan Low | `abcacdddacdd` |
+| Fan Medium | `abcacddacddd` |
+| Fan High | `abcacdacdddd` |
+| Fan Off | `abcacdddddac` |
+| Light 1 Toggle | `abcacdddacda` |
+
+Fan Reverse (which would decode to `abcacddddacd`, derived from its transmit code and never captured) is deliberately not matched, since it does not change what Home Assistant shows.
+
+A single press repeats the frame about ten times, so the firmware acts on the first valid frame and ignores further matches for one second. Frames that are partly corrupted (dropped pulses, noise between presses) fail the pair-structure check and are discarded.

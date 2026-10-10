@@ -8,7 +8,7 @@
 
 A non-invasive, low-power smart gateway bridging a **303.875 MHz Craftmade ceiling fan and light** into **Home Assistant** using **ESPHome**, a **Seeed Studio XIAO ESP32-C6**, and a **Texas Instruments CC1101** Sub-1 GHz transceiver.
 
-The original physical wall remote continues to operate normally with zero modifications or rewiring, while Home Assistant gains full, native two-way wireless control over fan speeds, direction, and lighting.
+The original physical wall remote continues to operate normally with zero modifications or rewiring, while Home Assistant gains full, native wireless control over fan speeds, direction, and lighting. The gateway also **listens** for the original remote, so presses on it show up in Home Assistant and the displayed fan and light state stays in sync.
 
 ---
 
@@ -27,8 +27,8 @@ The original physical wall remote continues to operate normally with zero modifi
 
 | Prototype Wiring Setup | 3D Printed Enclosure |
 | :---: | :---: |
-| ![Wired Setup](media/hardware/setup-wired-placeholder.png) | ![3D Enclosure](media/hardware/setup-enclosure-placeholder.png) |
-| *Soldered breadboard / jumper prototype* | *Custom compact wall/shelf housing* |
+| ![Wired Setup](media/hardware/setup-wired-placeholder.png) | ![3D Enclosure](media/hardware/setup-enclosure.jpg) |
+| *Soldered breadboard / jumper prototype* | *Final build in its 3D-printed case, SMA antenna and USB-C power out the side* |
 
 ---
 
@@ -36,12 +36,16 @@ The original physical wall remote continues to operate normally with zero modifi
 
 * **Concurrent Dual Control:** The original Craftmade wall remote and Home Assistant control the fan simultaneously without interference or desynchronization.
 * **Non-Invasive Installation:** No line voltage rewiring or ladder climbing required. The gateway transmits RF commands directly to the existing receiver in the fan canopy.
-* **Low-Power Standby:**
-  * **Wi-Fi 802.11 DTIM Modem Sleep (`power_save_mode: LIGHT`):** Gateway idle draw drops from ~90 mA to **<15 mA** while waking in under **10 ms** when Home Assistant commands arrive.
-  * **Automated Radio Standby:** CC1101 transitions to `set_idle` on boot and immediately after packet transmission, reducing radio draw to **~1.5 mA**.
-  * **Sniffer Deactivation:** Continuous interrupt sniffer is disabled in production to eliminate unnecessary ISR CPU load.
+* **Remote Press Sync:** The CC1101 stays in receive mode between transmissions and decodes presses on the original remote (fan Low / Medium / High / Off and the light toggle). Each press updates the Home Assistant `fan` and `light` entities **without transmitting anything back**, so the two never fight. See [RF Press Sync](#rf-press-sync).
+* **Safe Light Handling:** The light's RF code is a *toggle*, so the firmware tracks the believed bulb state and only transmits when a command actually changes it. A redundant "off" (for example from an all-lights-off script) does nothing instead of turning the light on.
+* **Silent Boot:** Nothing is transmitted while the device boots and restores state, so a power cycle never flips the fan or light.
+* **Always-Transmit Buttons:** The `button` entities send their RF code regardless of what Home Assistant thinks the state is, then update the displayed state to match. A **Light State Flip (no RF)** button corrects Home Assistant's view of the light without sending anything.
+* **Diagnostics Included:** Uptime, Wi-Fi signal, BSSID, free heap, loop time and reset reason are exposed as diagnostic entities so dropouts and reboots are easy to explain.
 * **Reverse-Engineered Timings:** Mean pulse intervals computed over high-sample-rate continuous sniffer captures, achieving 100% transmission reliability with 6x repeat bursts.
 * **Native Home Assistant Entities:** Exposes standard `fan` (with 3-speed step mapping), binary `light`, and discrete action `button` entities.
+
+> [!NOTE]
+> Wi-Fi power save is set to `NONE`. Modem sleep (`LIGHT`) saved power but the device repeatedly dropped off Wi-Fi for hours at a time at about -83 dBm. The unit is wall-powered, so reliability wins. If your signal is weak, antenna or access point placement matters more than any firmware setting.
 
 ---
 
@@ -53,13 +57,13 @@ The original physical wall remote continues to operate normally with zero modifi
 | **RF Transceiver** | TI CC1101 Sub-1 GHz Wireless Transceiver Module with SMA Antenna | [Amazon](https://www.amazon.com/dp/B0D2TMTV5Z) |
 | **Antenna** | 315/433 MHz SMA rubber ducky antenna (included with module) | Included |
 | **Power Supply** | Standard 5V USB-C power adapter | Standard |
-| **Enclosure** | Custom 3D-printed compact housing | *Pending* |
+| **Enclosure** | Custom 3D-printed compact housing (screw-down lid, SMA antenna and USB-C cutouts) | Printed in-house |
 
 ---
 
 ## Hardware & Wiring
 
-The Texas Instruments CC1101 communicates with the ESP32-C6 via hardware SPI. In addition, **GDO0** is connected to a dedicated output pin for direct 100% duty-cycle OOK modulation, and **GDO2** is wired for RF sniffing and timing analysis.
+The Texas Instruments CC1101 communicates with the ESP32-C6 via hardware SPI. In addition, **GDO0** is connected to a dedicated output pin for direct 100% duty-cycle OOK modulation, and **GDO2** is wired as the receive input, used for timing analysis during development and for decoding the original remote in production.
 
 ![Wiring Diagram](media/diagrams/wiring-schematic.svg)
 
@@ -77,7 +81,7 @@ The Texas Instruments CC1101 communicates with the ESP32-C6 via hardware SPI. In
 | **SPI MISO** | `D9` | `GPIO20` | **Pin 7** (`MISO`) | 🔵 Blue | SPI Master In |
 | **SPI CSN** | `D4` | `GPIO22` | **Pin 4** (`CSN`) | 🟣 Purple | SPI Chip Select (Active LOW) |
 | **RF TX (GDO0)** | `D3` | `GPIO21` | **Pin 3** (`GDO0`) | 🟠 Orange | Direct Carrier Modulation Output |
-| **RF RX (GDO2)** | `D5` | `GPIO23` | **Pin 8** (`GDO2`) | 🔵 Cyan (Dashed) | Demodulated OOK Receiver (Sniffer) |
+| **RF RX (GDO2)** | `D5` | `GPIO23` | **Pin 8** (`GDO2`) | 🔵 Cyan (Dashed) | Demodulated OOK Receiver (remote press sync) |
 
 ---
 
@@ -117,6 +121,32 @@ Once added to Home Assistant via the native ESPHome integration, the gateway aut
 | `button.living_room_fan_speed_high` | `button` | Discrete Fan Speed 3 (High) |
 | `button.living_room_fan_reverse` | `button` | Discrete Fan Reverse trigger |
 | `button.living_room_fan_power_off` | `button` | Discrete Fan Power Off trigger |
+| `button.<device>_light_state_flip_no_rf` | `button` | Flips the light state shown in Home Assistant **without** transmitting (resync) |
+| `sensor.<device>_uptime`, `_wifi_signal`, `_heap_free`, `_loop_time` | `sensor` | Diagnostics |
+| `sensor.<device>_reset_reason`, `_connected_bssid`, `_ip_address` | `sensor` | Diagnostics |
+
+---
+
+## RF Press Sync
+
+The fan canopy receiver never reports its state, so Home Assistant can only *assume* it. Without the receive path, any press on the original remote would leave Home Assistant showing the wrong state.
+
+With the CC1101 left in receive mode, the firmware decodes presses on the original remote and mirrors them into Home Assistant:
+
+| Remote press | What Home Assistant shows |
+| :--- | :--- |
+| Fan Low / Medium / High | Fan on at that speed |
+| Fan Off | Fan off |
+| Light toggle | Light flips on/off |
+
+Details worth knowing:
+
+* **No echo.** A global `rx_sync` flag makes every transmit script exit immediately while state is being mirrored, so syncing never re-sends the command over RF. The same flag keeps the device silent for 10 seconds after boot.
+* **Classified, not matched.** The receiver measures slightly different pulse widths than the transmit timings, so frames are classified as short/long and compared by pattern. See [docs/rf-protocol-analysis.md](docs/rf-protocol-analysis.md#5-receive-side-decoding-keeping-home-assistant-in-sync).
+* **One action per press.** A press repeats the frame about ten times; the first valid frame wins and further matches are ignored for one second.
+* **Light is a toggle.** The remote has no discrete on/off for the light. The firmware tracks the believed bulb state (`light_rf_on`) and only transmits when a command changes it. If Home Assistant and the real bulb disagree, press **Light State Flip (no RF)** once.
+* **Fan commands are absolute.** Pressing any speed or Off button in Home Assistant always sends the real command, so a wrong fan state is fixed by simply pressing the right button.
+* **Reverse is not tracked.** Reverse does not change what the fan entity shows, so it is not decoded.
 
 ---
 

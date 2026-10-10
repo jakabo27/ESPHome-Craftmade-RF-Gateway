@@ -2,16 +2,22 @@
 # ESPHome Configuration: 303.875 MHz Craftmade Ceiling Fan & Light RF Gateway
 # Hardware: Seeed Studio XIAO ESP32-C6 + TI CC1101 Sub-1 GHz Transceiver
 # Target: 303.875 MHz OOK/ASK Receiver in Ceiling Fan Canopy
+#
+# Two-way: transmits the remote's codes for Home Assistant commands AND listens
+# for the physical remote so Home Assistant's fan/light state stays in sync.
 # ==============================================================================
 
 esphome:
   name: ceiling-fan-rf
   friendly_name: "ESPHome Craftmade Ceiling Fan & Light RF Gateway"
-  # Initialize CC1101 into idle mode on boot to minimize standby power draw
   on_boot:
     priority: -100
     then:
-      - cc1101.set_idle
+      # Radio listens by default so physical remote presses are heard.
+      - cc1101.begin_rx
+      # rx_sync starts true so nothing transmits while boot-time state restore runs.
+      - delay: 10s
+      - lambda: 'id(rx_sync) = false;'
 
 esp32:
   variant: esp32c6
@@ -29,14 +35,53 @@ ota:
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
-  # 802.11 DTIM modem sleep: drops active idle power by ~70-80% while preserving <10ms wake latency
-  power_save_mode: LIGHT
+  # Modem sleep (LIGHT) was dropping this device off Wi-Fi for hours at a time on a
+  # weak signal. It is wall-powered, so there is no reason to sleep the radio.
+  # NOTE: signal is marginal (about -80 dBm in the original install location);
+  # antenna or AP placement is the real fix if dropouts return.
+  power_save_mode: NONE
 
 logger:
   hardware_uart: USB_SERIAL_JTAG
   level: INFO
 
-# Hardware SPI configuration on Seeed XIAO ESP32-C6
+# Diagnostics so a dropout or reboot has a visible cause. reset_reason shows
+# crash (panic/watchdog) vs. power loss; uptime shows reboots; wifi signal shows
+# range problems; loop time shows whether the RF receiver lambda starves the
+# single-core C6.
+debug:
+  update_interval: 60s
+
+sensor:
+  - platform: uptime
+    name: "Uptime"
+    entity_category: diagnostic
+  - platform: wifi_signal
+    name: "WiFi Signal"
+    update_interval: 60s
+    entity_category: diagnostic
+  - platform: debug
+    free:
+      name: "Heap Free"
+      entity_category: diagnostic
+    loop_time:
+      name: "Loop Time"
+      entity_category: diagnostic
+
+text_sensor:
+  - platform: debug
+    reset_reason:
+      name: "Reset Reason"
+      entity_category: diagnostic
+  - platform: wifi_info
+    ip_address:
+      name: "IP Address"
+      entity_category: diagnostic
+    bssid:
+      name: "Connected BSSID"
+      entity_category: diagnostic
+
+# Hardware SPI configuration for XIAO ESP32-C6
 spi:
   clk_pin: GPIO19   # D8
   mosi_pin: GPIO18  # D10
@@ -48,8 +93,25 @@ cc1101:
   frequency: 303.875MHz
   filter_bandwidth: 406kHz
 
+# rx_sync is true during boot and while a physical-remote press (or an HA button
+# override) is being mirrored into HA state; the send_* scripts bail out while it
+# is true so state mirroring never re-transmits over RF.
+# light_rf_on is what we believe the real bulb is doing. The RF code is a TOGGLE,
+# so we only transmit when a command actually changes that belief (an "off" sent
+# while already believed off must NOT toggle the bulb on).
+globals:
+  - id: rx_sync
+    type: bool
+    initial_value: 'true'
+  - id: rx_last_ms
+    type: uint32_t
+    initial_value: '0'
+  - id: light_rf_on
+    type: bool
+    initial_value: 'false'
+
 # Remote Transmitter (CC1101 GDO0)
-# Enters TX mode only for the duration of the packet burst, then returns to IDLE state
+# Enters TX mode only during a burst, then returns to RX so the physical remote is heard.
 remote_transmitter:
   pin: GPIO21       # D3
   carrier_duty_percent: 100%
@@ -59,25 +121,85 @@ remote_transmitter:
       - cc1101.begin_tx
   on_complete:
     then:
-      - cc1101.set_idle
+      - cc1101.begin_rx
 
-# Remote Receiver / Sniffer (CC1101 GDO2)
-# Commented out in production to eliminate continuous RX power consumption (~17mA).
-# Uncomment if sniffing new remote codes is needed.
-# remote_receiver:
-#   pin: GPIO23       # D5
-#   filter: 150us
-#   idle: 15ms
-#   tolerance: 30%
-#   buffer_size: 10kb
+# Remote Receiver (CC1101 GDO2): mirrors physical remote presses into HA state.
+# Each frame is 13 mark/space pairs; the first 12 are classified into a key:
+#   a=short/short  b=long/short  c=long/long  d=short/long
+# (short/long thresholds: marks 450 us, spaces 560 us - the receiver measures
+# slightly different absolute widths than the transmit timings, so we classify
+# rather than match exact values.)
+remote_receiver:
+  pin: GPIO23       # D5
+  filter: 150us
+  idle: 15ms
+  tolerance: 30%
+  buffer_size: 10kb
+  on_raw:
+    then:
+      - lambda: |-
+          for (size_t i = 0; i + 25 < x.size(); i++) {
+            if (x[i] <= 0) continue;
+            if (i > 0 && x[i - 1] > -5000) continue;
+            std::string key;
+            bool ok = true;
+            for (int p = 0; p < 12; p++) {
+              int m = x[i + 2 * p];
+              int s = x[i + 2 * p + 1];
+              if (m <= 0 || s >= 0) { ok = false; break; }
+              bool ml = m > 450;
+              bool sl = -s > 560;
+              key += ml ? (sl ? 'c' : 'b') : (sl ? 'd' : 'a');
+            }
+            if (!ok) continue;
+            if (!(x[i + 24] > 0 && x[i + 25] < -5000)) continue;
+            // A press repeats the frame ~10x; act once per press.
+            uint32_t now = millis();
+            bool fresh = (now - id(rx_last_ms)) > 1000;
+            id(rx_last_ms) = now;
+            if (!fresh) return;
+            int speed = 0;
+            bool fan_off = false, light_toggle = false;
+            if (key == "abcacdddacdd") speed = 1;
+            else if (key == "abcacddacddd") speed = 2;
+            else if (key == "abcacdacdddd") speed = 3;
+            else if (key == "abcacdddddac") fan_off = true;
+            else if (key == "abcacdddacda") light_toggle = true;
+            else return;
+            // Mirror into HA state without transmitting anything back.
+            id(rx_sync) = true;
+            if (light_toggle) {
+              bool on = id(living_room_fan_light_1).current_values.is_on();
+              id(living_room_fan_light_1).current_values.set_state(!on);
+              id(living_room_fan_light_1).remote_values.set_state(!on);
+              id(light_rf_on) = !on;
+              id(living_room_fan_light_1).publish_state();
+              ESP_LOGI("rfsync", "Remote: light toggle -> %s", on ? "off" : "on");
+            } else if (fan_off) {
+              id(living_room_fan).state = false;
+              id(living_room_fan).publish_state();
+              ESP_LOGI("rfsync", "Remote: fan off");
+            } else {
+              id(living_room_fan).state = true;
+              id(living_room_fan).speed = speed;
+              id(living_room_fan).publish_state();
+              ESP_LOGI("rfsync", "Remote: fan speed %d", speed);
+            }
+            id(rx_sync) = false;
+            return;
+          }
 
-# ==============================================================================
-# RF Signal Scripts (Mean pulse timings reverse-engineered from physical remote)
-# Base unit T ≈ 330-350 µs, 2T ≈ 650-710 µs, repeat gap ≈ 11.9 ms
-# ==============================================================================
+# RF Signal Scripts
+# Each bails out while rx_sync is true (boot / state mirroring) so nothing is
+# ever transmitted as a side effect of updating HA's view of the state.
 script:
   - id: send_fan_low
     then:
+      - if:
+          condition:
+            lambda: 'return id(rx_sync);'
+          then:
+            - script.stop: send_fan_low
       - remote_transmitter.transmit_raw:
           code: [335, -351, 653, -361, 646, -708, 306, -366, 650, -702, 308, -710, 307, -706, 308, -706, 313, -412, 599, -703, 310, -708, 308, -704, 312, -11907]
           repeat:
@@ -86,6 +208,11 @@ script:
 
   - id: send_fan_medium
     then:
+      - if:
+          condition:
+            lambda: 'return id(rx_sync);'
+          then:
+            - script.stop: send_fan_medium
       - remote_transmitter.transmit_raw:
           code: [336, -346, 653, -364, 647, -706, 302, -375, 639, -707, 307, -714, 300, -712, 305, -369, 646, -705, 308, -709, 306, -707, 309, -707, 309, -11911]
           repeat:
@@ -94,6 +221,11 @@ script:
 
   - id: send_fan_high
     then:
+      - if:
+          condition:
+            lambda: 'return id(rx_sync);'
+          then:
+            - script.stop: send_fan_high
       - remote_transmitter.transmit_raw:
           code: [338, -342, 654, -363, 648, -704, 312, -364, 646, -705, 307, -707, 308, -367, 650, -701, 308, -706, 307, -707, 311, -705, 309, -705, 310, -11904]
           repeat:
@@ -102,6 +234,11 @@ script:
 
   - id: send_fan_reverse
     then:
+      - if:
+          condition:
+            lambda: 'return id(rx_sync);'
+          then:
+            - script.stop: send_fan_reverse
       - remote_transmitter.transmit_raw:
           code: [331, -353, 651, -363, 648, -706, 308, -365, 649, -703, 308, -706, 310, -705, 310, -704, 310, -705, 312, -363, 649, -702, 308, -706, 311, -11896]
           repeat:
@@ -110,6 +247,11 @@ script:
 
   - id: send_fan_off
     then:
+      - if:
+          condition:
+            lambda: 'return id(rx_sync);'
+          then:
+            - script.stop: send_fan_off
       - remote_transmitter.transmit_raw:
           code: [335, -347, 651, -362, 648, -708, 310, -361, 647, -708, 308, -708, 304, -707, 307, -707, 310, -708, 305, -708, 309, -363, 651, -702, 311, -11902]
           repeat:
@@ -118,13 +260,18 @@ script:
 
   - id: send_light_1_toggle
     then:
+      - if:
+          condition:
+            lambda: 'return id(rx_sync);'
+          then:
+            - script.stop: send_light_1_toggle
       - remote_transmitter.transmit_raw:
           code: [332, -352, 646, -371, 640, -712, 303, -374, 638, -713, 301, -713, 308, -705, 307, -713, 304, -366, 648, -706, 309, -707, 308, -365, 645, -11916]
           repeat:
             times: 6
             wait_time: 0s
 
-  # Optional Secondary Light (L2) - Commented out as single-light fixture is installed
+  # Light 2 (uncomment if your remote has a second light channel)
   # - id: send_light_2_toggle
   #   then:
   #     - remote_transmitter.transmit_raw:
@@ -133,19 +280,23 @@ script:
   #           times: 6
   #           wait_time: 0s
 
-# ==============================================================================
-# Home Assistant Native Entities
-# ==============================================================================
-
-# Fan Component (Exposes native 3-speed fan entity)
+# Fan Entity for Home Assistant
 fan:
   - platform: template
     name: "Living Room Ceiling Fan"
     id: living_room_fan
     speed_count: 3
+    restore_mode: RESTORE_DEFAULT_OFF
+    # Turning on always transmits the speed being turned on to, even when the stored
+    # speed equals the requested one (on_speed_set only fires on a speed change).
     on_turn_on:
       - lambda: |-
-          if (id(living_room_fan).speed == 0) {
+          int s = id(living_room_fan).speed;
+          if (s == 3) {
+            id(send_fan_high).execute();
+          } else if (s == 2) {
+            id(send_fan_medium).execute();
+          } else {
             id(send_fan_low).execute();
           }
     on_turn_off:
@@ -160,42 +311,99 @@ fan:
             id(send_fan_high).execute();
           }
 
-# Output and Light Components
+# Output and Light Entities for Home Assistant
 output:
   - platform: template
     id: light_1_output
     type: binary
+    # Only transmit when the commanded state differs from what we believe the bulb
+    # is doing. The RF code is a toggle, so a redundant "off" (e.g. an all-lights-off
+    # script firing while the light is already off) would otherwise turn the light ON.
     write_action:
-      - script.execute: send_light_1_toggle
+      - lambda: |-
+          bool want = id(living_room_fan_light_1).remote_values.is_on();
+          if (want == id(light_rf_on)) {
+            ESP_LOGI("rflight", "HA light %s: already believed %s, no RF sent", want ? "on" : "off", want ? "on" : "off");
+            return;
+          }
+          id(light_rf_on) = want;
+          if (id(rx_sync)) {
+            ESP_LOGI("rflight", "HA light %s during sync/boot, no RF sent", want ? "on" : "off");
+            return;
+          }
+          ESP_LOGI("rflight", "HA light %s: sending RF toggle", want ? "on" : "off");
+          id(send_light_1_toggle).execute();
 
 light:
   - platform: binary
     name: "Living Room Fan Light"
     id: living_room_fan_light_1
     output: light_1_output
+    # RF is one-way to the fan, so the real bulb state is unknown after a reboot.
+    # Assume off; use the "Light State Flip (no RF)" button if that is wrong.
+    restore_mode: RESTORE_DEFAULT_OFF
 
-# Discrete Action Buttons (Useful for Dashboards and direct automations)
+# HA buttons always transmit (ignoring what HA thinks the state is) and then
+# update the displayed state to match, so they can override a wrong state.
 button:
   - platform: template
     name: "Light 1 Toggle"
     icon: "mdi:lightbulb-sync"
     on_press:
       - script.execute: send_light_1_toggle
+      - lambda: |-
+          bool on = id(living_room_fan_light_1).current_values.is_on();
+          id(living_room_fan_light_1).current_values.set_state(!on);
+          id(living_room_fan_light_1).remote_values.set_state(!on);
+          id(light_rf_on) = !on;
+          id(living_room_fan_light_1).publish_state();
+  # State-only fix: flips what HA shows WITHOUT sending RF. Use when HA and the
+  # real light disagree.
+  - platform: template
+    name: "Light State Flip (no RF)"
+    icon: "mdi:lightbulb-question"
+    on_press:
+      - lambda: |-
+          id(rx_sync) = true;
+          bool on = id(living_room_fan_light_1).current_values.is_on();
+          id(living_room_fan_light_1).current_values.set_state(!on);
+          id(living_room_fan_light_1).remote_values.set_state(!on);
+          id(light_rf_on) = !on;
+          id(living_room_fan_light_1).publish_state();
+          id(rx_sync) = false;
   - platform: template
     name: "Fan Speed Low"
     icon: "mdi:fan-speed-1"
     on_press:
       - script.execute: send_fan_low
+      - lambda: |-
+          id(rx_sync) = true;
+          id(living_room_fan).state = true;
+          id(living_room_fan).speed = 1;
+          id(living_room_fan).publish_state();
+          id(rx_sync) = false;
   - platform: template
     name: "Fan Speed Medium"
     icon: "mdi:fan-speed-2"
     on_press:
       - script.execute: send_fan_medium
+      - lambda: |-
+          id(rx_sync) = true;
+          id(living_room_fan).state = true;
+          id(living_room_fan).speed = 2;
+          id(living_room_fan).publish_state();
+          id(rx_sync) = false;
   - platform: template
     name: "Fan Speed High"
     icon: "mdi:fan-speed-3"
     on_press:
       - script.execute: send_fan_high
+      - lambda: |-
+          id(rx_sync) = true;
+          id(living_room_fan).state = true;
+          id(living_room_fan).speed = 3;
+          id(living_room_fan).publish_state();
+          id(rx_sync) = false;
   - platform: template
     name: "Fan Reverse"
     icon: "mdi:fan-auto"
@@ -206,3 +414,8 @@ button:
     icon: "mdi:fan-off"
     on_press:
       - script.execute: send_fan_off
+      - lambda: |-
+          id(rx_sync) = true;
+          id(living_room_fan).state = false;
+          id(living_room_fan).publish_state();
+          id(rx_sync) = false;
