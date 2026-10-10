@@ -29,10 +29,10 @@
   </g>
 
   <!-- Title Header -->
-  <g transform="translate(40, 36)">
-    <rect x="-10" y="-6" width="4" height="42" fill="#38bdf8" rx="2"/>
+  <g transform="translate(40, 26)">
+    <rect x="-10" y="-8" width="4" height="38" fill="#38bdf8" rx="2"/>
     <text font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="20" font-weight="700" fill="#f8fafc" letter-spacing="0.3">Craftmade 303.875 MHz OOK Transmission Packet Timing</text>
-    <text y="24" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="13" fill="#94a3b8">Reverse-Engineered Pulse Structure · 26-Pulse Alternating Mark/Space Sequence (Example: Fan High)</text>
+    <text y="20" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="13" fill="#94a3b8">Reverse-Engineered Pulse Structure · 26-Pulse Alternating Mark/Space Sequence (Example: Fan High)</text>
   </g>
 
   <!-- ==================== WAVEFORM SECTION ==================== -->
@@ -120,7 +120,7 @@
     <line x1="0" y1="0" x2="20" y2="0" stroke="#fcd34d" stroke-width="1.2"/>
     <line x1="0" y1="-3" x2="0" y2="3" stroke="#fcd34d" stroke-width="1.2"/>
     <line x1="20" y1="-3" x2="20" y2="3" stroke="#fcd34d" stroke-width="1.2"/>
-    <text x="10" y="-5" font-family="monospace" font-size="9" font-weight="700" fill="#fcd34d" text-anchor="middle">T (340µs)</text>
+    <text x="22" y="-5" font-family="monospace" font-size="9" font-weight="700" fill="#fcd34d" text-anchor="end">T (340µs)</text>
   </g>
 
   <!-- Long Pulse Dimension (over Sym 1 Mark: x=100 to x=140) -->
@@ -128,7 +128,7 @@
     <line x1="0" y1="0" x2="40" y2="0" stroke="#fcd34d" stroke-width="1.2"/>
     <line x1="0" y1="-3" x2="0" y2="3" stroke="#fcd34d" stroke-width="1.2"/>
     <line x1="40" y1="-3" x2="40" y2="3" stroke="#fcd34d" stroke-width="1.2"/>
-    <text x="20" y="-5" font-family="monospace" font-size="9" font-weight="700" fill="#fcd34d" text-anchor="middle">2T (680µs)</text>
+    <text x="0" y="-5" font-family="monospace" font-size="9" font-weight="700" fill="#fcd34d" text-anchor="start">2T (680µs)</text>
   </g>
 
   <!-- Sync Gap Duration Callout -->
