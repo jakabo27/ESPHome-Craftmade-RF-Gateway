@@ -57,7 +57,7 @@ The original physical wall remote continues to operate normally with zero modifi
 | **RF Transceiver** | TI CC1101 Sub-1 GHz Wireless Transceiver Module with SMA Antenna | [Amazon](https://www.amazon.com/dp/B0D2TMTV5Z) |
 | **Antenna** | 315/433 MHz SMA rubber ducky antenna (included with module) | Included |
 | **Power Supply** | Standard 5V USB-C power adapter | Standard |
-| **Enclosure** | Custom 3D-printed compact housing (screw-down lid, SMA antenna and USB-C cutouts) | Printed in-house |
+| **Enclosure** | Custom 3D-printed compact housing (screw-down lid, SMA antenna and USB-C cutouts) [STL files](enclosure/) |
 
 ---
 
@@ -82,6 +82,19 @@ The Texas Instruments CC1101 communicates with the ESP32-C6 via hardware SPI. In
 | **SPI CSN** | `D4` | `GPIO22` | **Pin 4** (`CSN`) | 🟣 Purple | SPI Chip Select (Active LOW) |
 | **RF TX (GDO0)** | `D3` | `GPIO21` | **Pin 3** (`GDO0`) | 🟠 Orange | Direct Carrier Modulation Output |
 | **RF RX (GDO2)** | `D5` | `GPIO23` | **Pin 8** (`GDO2`) | 🔵 Cyan (Dashed) | Demodulated OOK Receiver (remote press sync) |
+
+---
+
+## 3D-Printed Enclosure
+
+A small two-part case holds the XIAO ESP32-C6 and the CC1101 module. The SMA antenna and the USB-C power cable both exit through one side, and the lid is held on with two screws.
+
+| File | Part | Approx. size |
+| :--- | :--- | :--- |
+| [`enclosure/RF-Box-Main.stl`](enclosure/RF-Box-Main.stl) | Main body | 45 × 57 × 50 mm |
+| [`enclosure/RF-Box-Lid.stl`](enclosure/RF-Box-Lid.stl) | Lid | 45 × 54 × 2.5 mm |
+
+![3D Enclosure](media/hardware/setup-enclosure.jpg)
 
 ---
 
